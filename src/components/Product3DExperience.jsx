@@ -77,10 +77,10 @@ export const Product3DExperience = ({
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // 2. Cámara adaptativa según ancho de pantalla
+    // 2. Cámara adaptativa con encuadre completo del producto (sin cortes)
     const isMobileInit = width < 640;
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 0, isMobileInit ? 9.8 : 8.5);
+    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+    camera.position.set(0, 0.1, isMobileInit ? 12.0 : 10.2);
     cameraRef.current = camera;
 
     // 3. Renderer con soporte WebGL de alta fidelidad
@@ -126,9 +126,14 @@ export const Product3DExperience = ({
     tubeGroup.rotation.y = 0.05;
     tubeGroup.rotation.z = -0.06;
 
-    // Textura procedural ultra nítida de la etiqueta
-    const textureCanvas = generateTubeTexture();
-    const tubeTexture = new THREE.CanvasTexture(textureCanvas);
+    // Textura de alta definición con la etiqueta oficial GEORGE 2.0 DIABLO
+    let tubeTexture;
+    const textureCanvas = generateTubeTexture(() => {
+      if (tubeTexture) {
+        tubeTexture.needsUpdate = true;
+      }
+    });
+    tubeTexture = new THREE.CanvasTexture(textureCanvas);
     tubeTexture.colorSpace = THREE.SRGBColorSpace;
     tubeTexture.wrapS = THREE.RepeatWrapping;
     tubeTexture.repeat.set(1, 1);
@@ -314,13 +319,13 @@ export const Product3DExperience = ({
     window.addEventListener('touchmove', onTouchMove, { passive: true });
     window.addEventListener('touchend', onTouchEnd);
 
-    // Manejo de Resize
+    // Manejo de Resize con encuadre completo de la botella
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const newW = container.clientWidth;
       const newH = container.clientHeight;
       camera.aspect = newW / newH;
-      camera.position.z = newW < 640 ? 9.8 : 8.5;
+      camera.position.z = newW < 640 ? 12.0 : 10.2;
       camera.updateProjectionMatrix();
       renderer.setSize(newW, newH);
     };

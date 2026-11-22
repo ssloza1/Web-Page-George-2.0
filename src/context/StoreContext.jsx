@@ -14,14 +14,14 @@ const DEFAULT_CATEGORIES = [
 const DEFAULT_PRODUCTS = [
   {
     id: 'prod-1',
-    name: 'GEORGE 2.0 // Esmeralda Puro Caramelo',
+    name: 'GEORGE 2.0 // Diablo Puro Caramelo',
     category: 'cremas',
     price: 34.99,
     regularPrice: 42.00,
     tag: 'INSIGNIA',
     badge: 'MÁS VENDIDO',
-    description: 'Fórmula de choque muscular con efecto dual frío/calor y extracto de esmeralda. Absorción en menos de 45 seg.',
-    image: '/assets/george_223_chica_diamonds.jpg',
+    description: 'Fórmula original Esmeralda Puro Caramelo Diablo con efecto dual frío/calor. Absorción ultra rápida en menos de 45 seg.',
+    image: '/assets/label_diablo_official.jpg',
     specs: ['150ml', 'Antifricción', 'Efecto Crio-Térmico'],
   },
   {

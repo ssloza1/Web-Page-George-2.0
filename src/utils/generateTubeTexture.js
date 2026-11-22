@@ -1,27 +1,27 @@
-// Generador de textura procedural en Canvas 2D de alta resolución (2048x1024)
-// Diseñado para envolver perfectamente el tubo 3D con la estética exacta de la referencia
-export function generateTubeTexture() {
+// Generador de textura de alta definición para el tubo 3D GEORGE 2.0
+// Integra la etiqueta oficial exacta "ESMERALDA - PURO CARAMELO - GEORGE 2.0 - DIABLO"
+export function generateTubeTexture(onTextureLoaded) {
   const canvas = document.createElement('canvas');
   canvas.width = 2048;
   canvas.height = 1024;
   const ctx = canvas.getContext('2d');
   if (!ctx) return canvas;
 
-  // 1. Fondo blanco satinado del tubo
-  ctx.fillStyle = '#F8FAFC';
+  // 1. Fondo blanco satinado cosmético de lujo
+  ctx.fillStyle = '#FAFAFA';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Sutil gradiente de sombra para profundidad cilíndrica natural
   const tubeGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
   tubeGrad.addColorStop(0, '#E2E8F0');
-  tubeGrad.addColorStop(0.15, '#FFFFFF');
+  tubeGrad.addColorStop(0.12, '#FFFFFF');
   tubeGrad.addColorStop(0.5, '#F8FAFC');
-  tubeGrad.addColorStop(0.85, '#FFFFFF');
+  tubeGrad.addColorStop(0.88, '#FFFFFF');
   tubeGrad.addColorStop(1, '#E2E8F0');
   ctx.fillStyle = tubeGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 2. Líneas de sellado superior (crimped tube seal) en la parte superior de la textura
+  // 2. Líneas de sellado superior (crimped tube seal)
   ctx.fillStyle = '#CBD5E1';
   for (let x = 0; x < canvas.width; x += 16) {
     ctx.fillRect(x, 0, 8, 48);
@@ -29,157 +29,148 @@ export function generateTubeTexture() {
   ctx.fillStyle = '#94A3B8';
   ctx.fillRect(0, 46, canvas.width, 4);
 
-  // 3. ETIQUETA PRINCIPAL EN EL FRENTE (Centro de la textura: x ~ 1024)
-  const labelW = 760;
-  const labelH = 620;
+  // Dimensiones y posición de la etiqueta en el frente del tubo
+  const labelW = 440;
+  const labelH = 740;
   const labelX = (canvas.width - labelW) / 2;
-  const labelY = 220;
+  const labelY = 160;
 
-  // Sombra proyectada suave de la etiqueta
-  ctx.save();
-  ctx.shadowColor = 'rgba(6, 38, 24, 0.45)';
-  ctx.shadowBlur = 30;
-  ctx.shadowOffsetY = 12;
+  // 3. Renderizado inmediato vectorial del diseño oficial exacto mientras carga la imagen
+  const drawVectorLabel = () => {
+    ctx.save();
 
-  // Base de la etiqueta: Verde Esmeralda Profundo con degradado
-  const labelGrad = ctx.createLinearGradient(labelX, labelY, labelX + labelW, labelY + labelH);
-  labelGrad.addColorStop(0, '#04170E');
-  labelGrad.addColorStop(0.3, '#062618');
-  labelGrad.addColorStop(0.6, '#107C41');
-  labelGrad.addColorStop(1, '#00A859');
+    // Sombra suave proyectada por la etiqueta sobre el tubo plástico
+    ctx.shadowColor = 'rgba(6, 38, 24, 0.4)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 8;
 
-  // Forma de etiqueta con esquinas ornamentales redondeadas
-  const r = 36;
-  ctx.beginPath();
-  ctx.moveTo(labelX + r, labelY);
-  ctx.lineTo(labelX + labelW - r, labelY);
-  ctx.quadraticCurveTo(labelX + labelW, labelY, labelX + labelW, labelY + r);
-  ctx.lineTo(labelX + labelW, labelY + labelH - r);
-  ctx.quadraticCurveTo(labelX + labelW, labelY + labelH, labelX + labelW - r, labelY + labelH);
-  ctx.lineTo(labelX + r, labelY + labelH);
-  ctx.quadraticCurveTo(labelX, labelY + labelH, labelX, labelY + labelH - r);
-  ctx.lineTo(labelX, labelY + r);
-  ctx.quadraticCurveTo(labelX, labelY, labelX + r, labelY);
-  ctx.closePath();
-  ctx.fillStyle = labelGrad;
-  ctx.fill();
-  ctx.restore();
-
-  // Borde exterior dorado/plateado ornamental
-  ctx.strokeStyle = '#E2E8F0';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  // Borde interior con filigrana esmeralda brillante
-  ctx.strokeStyle = '#00FF88';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(labelX + 16, labelY + 16, labelW - 32, labelH - 32);
-
-  // Puntos decorativos en esquinas de la etiqueta
-  const corners = [
-    [labelX + 28, labelY + 28],
-    [labelX + labelW - 28, labelY + 28],
-    [labelX + 28, labelY + labelH - 28],
-    [labelX + labelW - 28, labelY + labelH - 28]
-  ];
-  ctx.fillStyle = '#FFFFFF';
-  corners.forEach(([cx, cy]) => {
+    // Fondo Verde Esmeralda Profundo
+    const r = 28;
     ctx.beginPath();
-    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.moveTo(labelX + r, labelY);
+    ctx.lineTo(labelX + labelW - r, labelY);
+    ctx.quadraticCurveTo(labelX + labelW, labelY, labelX + labelW, labelY + r);
+    ctx.lineTo(labelX + labelW, labelY + labelH - r);
+    ctx.quadraticCurveTo(labelX + labelW, labelY + labelH, labelX + labelW - r, labelY + labelH);
+    ctx.lineTo(labelX + r, labelY + labelH);
+    ctx.quadraticCurveTo(labelX, labelY + labelH, labelX, labelY + labelH - r);
+    ctx.lineTo(labelX, labelY + r);
+    ctx.quadraticCurveTo(labelX, labelY, labelX + r, labelY);
+    ctx.closePath();
+    ctx.fillStyle = '#0F5132'; // Verde esmeralda profundo de la etiqueta oficial
     ctx.fill();
-  });
+    ctx.restore();
 
-  // Emblema Central: Arco y Óvalo "ESMERALDA"
-  const centerX = labelX + labelW / 2;
-  
-  // Banda curva superior
-  ctx.save();
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+    // Doble línea de borde blanca/crema
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 3.5;
+    ctx.stroke();
 
-  // Texto: "ESMERALDA" (Arco ornamental)
-  ctx.font = '900 52px "Montserrat", sans-serif';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-  ctx.shadowBlur = 8;
-  ctx.fillText('★  ESMERALDA  ★', centerX, labelY + 80);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(labelX + 8, labelY + 8, labelW - 16, labelH - 16);
 
-  // Línea divisoria fina plateada
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(centerX - 180, labelY + 120);
-  ctx.lineTo(centerX + 180, labelY + 120);
-  ctx.stroke();
+    const cX = labelX + labelW / 2;
 
-  // Subtítulo: "PURO CARAMELO" (con estilo vintage y sombra)
-  ctx.font = '700 36px "Space Grotesk", sans-serif';
-  ctx.fillStyle = '#F8FAFC';
-  ctx.fillText('PURO CARAMELO', centerX, labelY + 165);
+    // Arco blanco superior (semicírculo)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cX, labelY + 220, 160, Math.PI, 0, false);
+    ctx.closePath();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    ctx.restore();
 
-  // Escudo central para "GEORGE 2.0"
-  const shieldW = 440;
-  const shieldH = 170;
-  const shieldX = centerX - shieldW / 2;
-  const shieldY = labelY + 215;
+    // Texto curvado "ESMERALDA" en marrón oscuro
+    ctx.save();
+    ctx.font = '900 38px "Montserrat", sans-serif';
+    ctx.fillStyle = '#3E2415'; // Marrón característico
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ESMERALDA', cX, labelY + 115);
 
-  ctx.fillStyle = '#062618';
-  ctx.strokeStyle = '#00FF88';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.roundRect ? ctx.roundRect(shieldX, shieldY, shieldW, shieldH, 20) : ctx.rect(shieldX, shieldY, shieldW, shieldH);
-  ctx.fill();
-  ctx.stroke();
+    // Hojas verdes a los costados
+    ctx.fillStyle = '#0F5132';
+    ctx.font = '32px sans-serif';
+    ctx.fillText('🌿', cX - 110, labelY + 185);
+    ctx.fillText('🌿', cX + 110, labelY + 185);
 
-  // Texto Gigante: "GEORGE 2.0"
-  ctx.font = '900 76px "Anton", sans-serif';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.shadowColor = 'rgba(0, 255, 136, 0.6)';
-  ctx.shadowBlur = 18;
-  ctx.fillText('GEORGE 2.0', centerX, shieldY + 95);
+    // Texto: PURO CARAMELO
+    ctx.font = '900 28px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#062618';
+    ctx.fillText('PURO CARAMELO', cX, labelY + 235);
 
-  // Placa Inferior Roja/Esmeralda: "CHICA" / "PRO RUNNING" (como en la referencia)
-  const tagW = 280;
-  const tagH = 50;
-  const tagX = centerX - tagW / 2;
-  const tagY = labelY + 420;
+    // Título monumental: GEORGE 2.0 con trazo blanco
+    ctx.font = '900 58px "Anton", sans-serif';
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.strokeText('GEORGE 2.0', cX, labelY + 320);
+    ctx.fillStyle = '#5A2A18'; // Relleno marrón
+    ctx.fillText('GEORGE 2.0', cX, labelY + 320);
 
-  ctx.fillStyle = '#D92D20'; // Rojo de la referencia "CHICA"
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.roundRect ? ctx.roundRect(tagX, tagY, tagW, tagH, 25) : ctx.rect(tagX, tagY, tagW, tagH);
-  ctx.fill();
-  ctx.stroke();
+    // Cartela curva roja DIABLO
+    ctx.save();
+    ctx.translate(cX, labelY + 410);
+    ctx.rotate(-0.03);
+    ctx.font = '900 64px "Anton", sans-serif';
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.strokeText('DIABLO', 0, 0);
+    ctx.fillStyle = '#991B1B'; // Rojo carmesí
+    ctx.fillText('DIABLO', 0, 0);
+    ctx.restore();
 
-  ctx.font = '900 28px "Montserrat", sans-serif';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.shadowBlur = 4;
-  ctx.fillText('CHICA // RUNNING', centerX, tagY + 28);
+    // Textos inferiores de calidad y origen
+    ctx.font = '700 16px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('CALIDAD', cX, labelY + 540);
+    ctx.font = '600 13px "Inter", sans-serif';
+    ctx.fillText('SABOR Y TRADICION NATURAL', cX, labelY + 580);
+    ctx.font = '700 15px "Space Grotesk", sans-serif';
+    ctx.fillText('ORIGINAL', cX, labelY + 625);
 
-  // Información Técnica Inferior
-  ctx.font = '600 20px "Space Grotesk", sans-serif';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-  ctx.fillText('150 ML // 5.1 FL.OZ  •  DERMA-SPORT RECOVERY', centerX, labelY + 515);
+    ctx.restore();
+  };
 
-  ctx.font = '500 15px "Inter", sans-serif';
-  ctx.fillStyle = 'rgba(226, 232, 240, 0.7)';
-  ctx.fillText('FÓRMULA CRIO-TÉRMICA ANTIFRICCIÓN DE ALTO IMPACTO', centerX, labelY + 555);
+  // Dibujar vector de inmediato
+  drawVectorLabel();
 
-  ctx.restore();
+  // 4. Cargar la imagen oficial de alta resolución y sobreponerla con máxima nitidez
+  const img = new Image();
+  img.src = '/assets/label_diablo_official.jpg';
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    // Limpiar zona de la etiqueta
+    ctx.save();
+    
+    // Aplicar sombra
+    ctx.shadowColor = 'rgba(6, 38, 24, 0.45)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 8;
 
-  // Cara trasera del tubo (información de ingredientes y modo de empleo)
-  const backCenterX = 350;
-  ctx.save();
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#334155';
-  ctx.font = '700 22px "Space Grotesk", sans-serif';
-  ctx.fillText('GEORGE 2.0 SPORT RECOVERY LAB', backCenterX, 320);
-  ctx.font = '500 14px "Inter", sans-serif';
-  ctx.fillText('Modo de uso: Aplicar antes y después de cada sesión de running.', backCenterX, 370);
-  ctx.fillText('Ingredientes: Esmeralda Bio-Activa, Óleo de Caramelo, Mentol, Magnesio.', backCenterX, 400);
-  ctx.fillText('Hecho para atletas de alto rendimiento.', backCenterX, 430);
-  ctx.restore();
+    // Dibujar la imagen oficial recortada con bordes redondeados
+    const r = 26;
+    ctx.beginPath();
+    ctx.moveTo(labelX + r, labelY);
+    ctx.lineTo(labelX + labelW - r, labelY);
+    ctx.quadraticCurveTo(labelX + labelW, labelY, labelX + labelW, labelY + r);
+    ctx.lineTo(labelX + labelW, labelY + labelH - r);
+    ctx.quadraticCurveTo(labelX + labelW, labelY + labelH, labelX + labelW - r, labelY + labelH);
+    ctx.lineTo(labelX + r, labelY + labelH);
+    ctx.quadraticCurveTo(labelX, labelY + labelH, labelX, labelY + labelH - r);
+    ctx.lineTo(labelX, labelY + r);
+    ctx.quadraticCurveTo(labelX, labelY, labelX + r, labelY);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.drawImage(img, labelX, labelY, labelW, labelH);
+    ctx.restore();
+
+    // Notificar a Three.js que la textura fue actualizada
+    if (onTextureLoaded) {
+      onTextureLoaded();
+    }
+  };
 
   return canvas;
 }
