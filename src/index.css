@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #0A0D0C;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Efectos de texto especiales */
+.stroke-brand {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.16);
+  color: transparent;
+}
+
+.stroke-brand-glow {
+  -webkit-text-stroke: 1px rgba(0, 168, 89, 0.35);
+}
+
+/* Glassmorphism de lujo */
+.glass-panel {
+  background: rgba(10, 13, 12, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 124, 65, 0.28);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(14, 22, 18, 0.88);
+  border-color: rgba(0, 168, 89, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(0, 168, 89, 0.25);
+}
+
+/* Pulso de halo esmeralda para Hotspots */
+@keyframes emeraldPulseHalo {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(0, 168, 89, 0.75);
+  }
+  70% {
+    transform: scale(1.4);
+    opacity: 0.2;
+    box-shadow: 0 0 0 16px rgba(0, 168, 89, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(0, 168, 89, 0);
+  }
+}
+
+.animate-emerald-halo {
+  animation: emeraldPulseHalo 2.2s infinite ease-out;
+}
+
+/* Brillo metálico para botones y orlas */
+@keyframes metallicShine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shine-button {
+  background-size: 200% auto;
+  transition: all 0.3s ease;
+}
+
+.shine-button:hover {
+  box-shadow: 0 0 25px rgba(0, 168, 89, 0.55), 0 0 50px rgba(16, 124, 65, 0.25);
+}
+
+/* Textura sutil de fibra de carbono para detalles */
+.carbon-fiber-pattern {
+  background-image: 
+    linear-gradient(45deg, #0e1311 25%, transparent 25%), 
+    linear-gradient(-45deg, #0e1311 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #0e1311 75%), 
+    linear-gradient(-45deg, transparent 75%, #0e1311 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0D0C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #107C41;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00A859;
+}
