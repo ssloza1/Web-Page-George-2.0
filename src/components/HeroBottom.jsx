@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Activity, ShieldCheck, Flame, ChevronRight, Wind, Zap } from 'lucide-react';
+import { Play, Sparkles, ShieldCheck, Flame, ChevronRight, Zap } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal }) => {
@@ -19,39 +19,37 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
         </span>
       </div>
 
-      {/* Frase Motivacional: "Rompe tus límites con cada zancada. GEORGE 2.0 — Puro Caramelo." en fuente Inter o Montserrat ligera */}
+      {/* Frase Motivacional — editable desde CMS */}
       <h3 className="font-montserrat font-light text-[clamp(1.15rem,2.2vw,1.65rem)] leading-snug text-white tracking-wide max-w-3xl mb-5">
         {config.heroTagline ? (
           <span>{config.heroTagline}</span>
         ) : (
           <>
-            Rompe tus límites con cada zancada.{' '}
+            Deja tu presencia, así no estés.{' '}
             <span className="text-[#00A859] font-bold drop-shadow-[0_0_12px_rgba(0,168,89,0.5)]">
               GEORGE 2.0
             </span>{' '}
             —{' '}
-            <span className="text-white font-semibold">
-              Puro Caramelo.
-            </span>
+            <span className="text-white font-semibold">Puro Caramelo.</span>
           </>
         )}
       </h3>
 
-      {/* Barra de Micro-Métricas de Rendimiento Running */}
+      {/* Micro-métricas de Estilo y Presencia */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-3xl mb-5">
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0A0D0C]/70 border border-white/10 backdrop-blur-md">
-          <Wind className="w-4 h-4 text-[#00FF88]" />
+          <Sparkles className="w-4 h-4 text-[#00FF88]" />
           <div className="text-left">
             <div className="text-[10px] font-mono text-[#94A3B8]">ABSORCIÓN</div>
-            <div className="text-xs font-grotesk font-bold text-white">&lt; 45 SEG</div>
+            <div className="text-xs font-grotesk font-bold text-white">{'<'} 45 SEG</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0A0D0C]/70 border border-white/10 backdrop-blur-md">
           <ShieldCheck className="w-4 h-4 text-[#00A859]" />
           <div className="text-left">
-            <div className="text-[10px] font-mono text-[#94A3B8]">ANTIFRICCIÓN</div>
-            <div className="text-xs font-grotesk font-bold text-white">RESISTENTE AL SUDOR</div>
+            <div className="text-[10px] font-mono text-[#94A3B8]">CUIDADO</div>
+            <div className="text-xs font-grotesk font-bold text-white">PIEL NUTRITIVA</div>
           </div>
         </div>
 
@@ -64,7 +62,7 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
         </div>
 
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0A0D0C]/70 border border-white/10 backdrop-blur-md">
-          <Activity className="w-4 h-4 text-[#00A859]" />
+          <Zap className="w-4 h-4 text-[#00A859]" />
           <div className="text-left">
             <div className="text-[10px] font-mono text-[#94A3B8]">FÓRMULA</div>
             <div className="text-xs font-grotesk font-bold text-white">BIO-ESMERALDA</div>
@@ -72,7 +70,7 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
         </div>
       </div>
 
-      {/* Botones de Exploración Multimedia Interactiva */}
+      {/* Botones de Acción */}
       <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           onClick={onOpenVideoModal}
@@ -88,7 +86,7 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
           onClick={onOpenAppModal}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#161E1A]/90 hover:bg-[#107C41]/30 border border-[#107C41]/50 hover:border-[#00FF88] text-xs font-montserrat font-semibold tracking-wider text-[#E2E8F0] hover:text-white transition-all shadow-md"
         >
-          <span>PRUEBA DE APLICACIÓN EN PIEL</span>
+          <span>VER EN PIEL</span>
           <ChevronRight className="w-3.5 h-3.5 text-[#00A859]" />
         </button>
 
@@ -97,7 +95,7 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#107C41] to-[#00A859] text-white text-xs font-montserrat font-bold tracking-wider shadow-[0_0_20px_rgba(0,168,89,0.35)] hover:shadow-[0_0_30px_rgba(0,168,89,0.6)] hover:scale-105 transition-all"
         >
           <Zap className="w-3.5 h-3.5 text-white" />
-          <span>COMPRAR GEORGE 2.0 ($34.99 USD)</span>
+          <span>EXPLORAR COLECCIÓN</span>
         </button>
       </div>
 

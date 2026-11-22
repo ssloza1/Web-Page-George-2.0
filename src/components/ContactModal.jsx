@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Phone, MapPin, Send, CheckCircle2 } from 'lucide-react';
+import { X, Mail, Phone, MapPin, Send, CheckCircle2, Instagram, Facebook } from 'lucide-react';
+import { useStore } from '../context/StoreContext';
 
 export const ContactModal = ({ isOpen, onClose }) => {
+  const { config } = useStore();
   const [sent, setSent] = useState(false);
 
   if (!isOpen) return null;
 
+  const email    = config.contactEmail    || 'hola@georgevariedades.com';
+  const phone    = config.contactPhone    || '+57 300 928 2000';
+  const location = config.contactLocation || 'Medellín / Bogotá / Envíos Globales';
+  const ig       = config.contactIG       || '@georgevariedades';
+  const fb       = config.contactFB       || 'fb.com/georgevariedades';
+  const wa       = config.contactWA       || '+57 300 928 2000';
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSent(true);
-    setTimeout(() => {
-      setSent(false);
-      onClose();
-    }, 1800);
+    setTimeout(() => { setSent(false); onClose(); }, 1800);
   };
 
   return (
@@ -31,14 +37,10 @@ export const ContactModal = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF88] animate-pulse" />
               <h3 className="font-grotesk font-bold text-base sm:text-lg text-white tracking-wide">
-                CONTACTO & SOPORTE ATLETA // GEORGE
+                CONTACTO // GEORGE VARIEDADES
               </h3>
             </div>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Cerrar modal"
-            >
+            <button onClick={onClose} className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors" aria-label="Cerrar">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -48,63 +50,59 @@ export const ContactModal = ({ isOpen, onClose }) => {
               <div className="py-12 text-center flex flex-col items-center">
                 <CheckCircle2 className="w-14 h-14 text-[#00FF88] mb-3" />
                 <h4 className="font-grotesk font-bold text-xl text-white">¡MENSAJE ENVIADO!</h4>
-                <p className="text-xs text-[#CBD5E1] mt-1">Un especialista en rendimiento responderá a tu consulta en menos de 3 horas.</p>
+                <p className="text-xs text-[#CBD5E1] mt-1">Nuestro equipo responderá a tu consulta pronto.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">TU NOMBRE</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ej. Sofía Runner"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]"
-                    />
+                    <input type="text" required placeholder="Ej. María García"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]" />
                   </div>
                   <div>
                     <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">CORREO ELECTRÓNICO</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="sofia@ejemplo.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]"
-                    />
+                    <input type="email" required placeholder="maria@ejemplo.com"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]" />
                   </div>
                 </div>
-
                 <div>
-                  <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">ASUNTO O CONSULTA DE RUNNING</label>
-                  <textarea
-                    rows={3}
-                    required
-                    placeholder="Escribe tu consulta sobre dosificación, compras por volumen para clubes o envíos..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]"
-                  />
+                  <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">ASUNTO O CONSULTA</label>
+                  <textarea rows={3} required placeholder="Escribe tu consulta sobre productos, precios, envíos..."
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#121715] border border-white/15 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF88]" />
                 </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#107C41] to-[#00A859] hover:from-[#00A859] hover:to-[#00FF88] text-white font-montserrat font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,168,89,0.3)]"
-                >
+                <button type="submit"
+                  className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#107C41] to-[#00A859] hover:from-[#00A859] hover:to-[#00FF88] text-white font-montserrat font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,168,89,0.3)]">
                   <Send className="w-4 h-4" />
-                  <span>Enviar Mensaje a Soporte</span>
+                  <span>Enviar Mensaje</span>
                 </button>
               </form>
             )}
 
-            <div className="pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#94A3B8]">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#00A859]" />
-                <span>hola@georgevariedades.com</span>
+            {/* Datos de contacto — siempre visibles, dinámicos */}
+            <div className="pt-4 border-t border-white/10 space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#94A3B8]">
+                <a href={`mailto:${email}`} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Mail className="w-4 h-4 text-[#00A859] shrink-0" /><span>{email}</span>
+                </a>
+                <a href={`tel:${phone}`} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Phone className="w-4 h-4 text-[#00A859] shrink-0" /><span>{phone}</span>
+                </a>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#00A859] shrink-0" /><span>{location}</span>
+                </div>
+                <a href={`https://wa.me/${wa.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors text-[#00FF88]">
+                  <Phone className="w-4 h-4 shrink-0" /><span>WhatsApp: {wa}</span>
+                </a>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#00A859]" />
-                <span>+57 300 928 2000</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#00A859]" />
-                <span>Medellín / Bogotá / Envíos Globales</span>
+              <div className="flex items-center gap-4 pt-1">
+                <span className="flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                  <Instagram className="w-4 h-4 text-[#00A859]" />{ig}
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                  <Facebook className="w-4 h-4 text-[#00A859]" />{fb}
+                </span>
               </div>
             </div>
           </div>
