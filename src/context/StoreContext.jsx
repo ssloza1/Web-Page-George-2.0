@@ -9,8 +9,8 @@ export const ADMIN_PASS = 'Esmeralda2026*';
 
 const StoreContext = createContext();
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://qdwirqwxuqoeyzwilcrt.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkd2lycXd4dXFvZXl6d2lsY3J0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU0NDQ4NTIsImV4cCI6MjExMTAyMDg1Mn0.QqSjQ5fh2i7rILN-JiuEquCs0Z87ej_QcBDw1uzznSs';
 const supabase = SUPABASE_URL && SUPABASE_ANON_KEY
   ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
