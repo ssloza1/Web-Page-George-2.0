@@ -166,7 +166,17 @@ export const StoreProvider = ({ children }) => {
     if (!published) return;
     if (Array.isArray(published.categories)) setCategories(published.categories);
     if (Array.isArray(published.products)) setProducts(published.products);
-    if (published.config && typeof published.config === 'object') setConfig(published.config);
+    if (published.config && typeof published.config === 'object') {
+      const incoming = published.config;
+      const normalized = {
+        ...DEFAULT_STORE_CONFIG,
+        ...incoming,
+      };
+      if (!incoming.heroVideoUrl || incoming.heroVideoUrl.includes('entregando-cremas.mp4')) {
+        normalized.heroVideoUrl = '/assets/prductoentregado.mp4';
+      }
+      setConfig((previous) => ({ ...DEFAULT_STORE_CONFIG, ...previous, ...normalized }));
+    }
   };
 
   useEffect(() => {

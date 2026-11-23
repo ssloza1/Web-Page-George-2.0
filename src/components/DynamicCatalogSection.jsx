@@ -55,8 +55,8 @@ const CategoryCard = ({ category, title, eyebrow, onOpenBuyModal, dark = false }
         {!isCream && (
           <div className="mb-10 grid grid-cols-2 gap-4 sm:max-w-3xl">
             {[
-              ['hombre', '/logo hombres .png'],
-              ['mujer', '/logo mujeres .png'],
+              ['hombre', '/assets/logo-hombres.png'],
+              ['mujer', '/assets/logo-mujeres.png'],
             ].map(([item, image]) => (
               <button key={item} onClick={() => setGender(item)} className={`gender-card ${gender === item ? 'gender-card-active' : ''}`}>
                 <img src={image} alt={item} className="h-24 w-full object-contain sm:h-36" />
@@ -118,11 +118,29 @@ const CategoryCard = ({ category, title, eyebrow, onOpenBuyModal, dark = false }
   );
 };
 
+const DynamicCatalogCards = ({ onOpenBuyModal }) => {
+  const { categories } = useStore();
+  const visibleCategories = categories.filter((category) => {
+    const id = String(category.id || '').trim().toLowerCase();
+    return id && id !== 'todos';
+  });
+
+  return (
+    <>
+      {visibleCategories.map((category, index) => (
+        <CategoryCard
+          key={category.id}
+          category={category.id}
+          title={String(category.name || category.id).toUpperCase()}
+          eyebrow="COLECCIÓN GEORGE VARIEDADES"
+          onOpenBuyModal={onOpenBuyModal}
+          dark={index % 2 === 1}
+        />
+      ))}
+    </>
+  );
+};
+
 export const DynamicCatalogSection = ({ onOpenBuyModal }) => (
-  <>
-    <CategoryCard category="cremas" title="CREMAS" eyebrow="CUIDADO PERSONAL" onOpenBuyModal={onOpenBuyModal} />
-    <CategoryCard category="perfumes" title="PERFUMES" eyebrow="ESSENCE & PRESENCIA" onOpenBuyModal={onOpenBuyModal} dark />
-    <CategoryCard category="ropa" title="ROPA" eyebrow="ESTILO CONTEMPORÁNEO" onOpenBuyModal={onOpenBuyModal} />
-    <CategoryCard category="relojes" title="RELOJES" eyebrow="PRECISIÓN & DISTINCIÓN" onOpenBuyModal={onOpenBuyModal} dark />
-  </>
+  <DynamicCatalogCards onOpenBuyModal={onOpenBuyModal} />
 );

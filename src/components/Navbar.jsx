@@ -5,7 +5,7 @@ import { useStore } from '../context/StoreContext';
 export const Navbar = ({ onOpenBuyModal, onOpenAboutModal, onOpenContactModal }) => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { totalCartCount } = useStore();
+  const { categories, totalCartCount } = useStore();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -14,8 +14,12 @@ export const Navbar = ({ onOpenBuyModal, onOpenAboutModal, onOpenContactModal })
   }, []);
 
   const links = [
-    ['INICIO', '#inicio'], ['CREMAS', '#cremas'], ['PERFUMES', '#perfumes'],
-    ['ROPA', '#ropa'], ['RELOJES', '#relojes'], ['SOBRE NOSOTROS', '#nosotros'], ['CONTACTO', '#contacto'],
+    ['INICIO', '#inicio'],
+    ...categories
+      .filter((category) => String(category.id || '').trim().toLowerCase() !== 'todos')
+      .map((category) => [String(category.name || category.id).toUpperCase(), `#${category.id}`]),
+    ['SOBRE NOSOTROS', '#nosotros'],
+    ['CONTACTO', '#contacto'],
   ];
 
   return (

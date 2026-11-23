@@ -150,6 +150,7 @@ function MainShop() {
                 {config.contactPhone}
               </a>
               <p>{config.contactLocation}</p>
+              {config.contactHours && <p>{config.contactHours}</p>}
               {config.contactMessage && <p className="mt-2 max-w-sm text-black/55 sm:ml-auto">{config.contactMessage}</p>}
             </div>
           </div>
