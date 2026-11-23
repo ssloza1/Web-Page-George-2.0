@@ -42,7 +42,7 @@ export const GiantTypography = ({ mouseX = 0, mouseY = 0 }) => {
         <div className="flex items-center gap-6 mt-4 opacity-15">
           <span className="h-[1px] w-24 bg-gradient-to-r from-transparent to-[#00A859]" />
           <span className="font-grotesk text-[10px] tracking-[0.4em] uppercase text-[#E2E8F0]">
-            PERFORMANCE RUNNING TECH // 150ML SPORT LAB
+            PERFORMANCE RUNNING TECH // 120ML SPORT LAB
           </span>
           <span className="h-[1px] w-24 bg-gradient-to-l from-transparent to-[#00A859]" />
         </div>

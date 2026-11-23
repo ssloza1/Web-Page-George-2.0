@@ -13,29 +13,29 @@ export const QuickBuyModal = ({ isOpen, onClose, onPurchaseSuccess }) => {
 
   const PACKS = {
     solo: {
-      name: 'GEORGE 2.0 // Edición 150ml',
+      name: 'GEORGE 2.0 // Edición 120 ml',
       price: 34.99,
       regularPrice: 42.00,
       discount: '17% OFF',
       tag: 'BÁSICO RUNNER',
-      desc: '1 Tubo individual de 150ml. Ideal para probar su fórmula de choque muscular.',
+      desc: '1 Tubo individual de 120 ml. Ideal para probar su fórmula de choque muscular.',
     },
     duo: {
-      name: 'PACK RUNNER DÚO // 2x 150ml',
+      name: 'PACK RUNNER DÚO // 2x 120 ml',
       price: 59.49,
       regularPrice: 84.00,
       discount: '30% OFF',
       tag: 'MÁS VENDIDO ★',
-      desc: '2 Tubos de 150ml. Uno para tu mochila de pista y otro para tu kit de recuperación en casa.',
+      desc: '2 Tubos de 120 ml. Uno para tu mochila de pista y otro para tu kit de recuperación en casa.',
       badge: 'POPULAR',
     },
     trio: {
-      name: 'MARATHON PRO LAB // 3x 150ml',
+      name: 'MARATHON PRO LAB // 3x 120 ml',
       price: 78.75,
       regularPrice: 126.00,
       discount: '38% OFF',
       tag: 'MÁXIMO AHORRO',
-      desc: '3 Tubos de 150ml + Envío prioritario gratis + Toalla deportiva de microfibra de regalo.',
+      desc: '3 Tubos de 120 ml + Envío prioritario gratis + Toalla deportiva de microfibra de regalo.',
     },
   };
 

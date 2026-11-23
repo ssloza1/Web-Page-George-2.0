@@ -7,6 +7,20 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { LOGO_TEXTURES } from './LogoG2';
+import { compressImage } from '../utils/compressImage';
+
+const InputField = ({ label, value, onChange, placeholder, type = 'text', textarea = false }) => (
+  <div>
+    <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">{label}</label>
+    {textarea ? (
+      <textarea rows={3} value={value ?? ''} onChange={onChange} placeholder={placeholder}
+        className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none resize-none" />
+    ) : (
+      <input type={type} value={value ?? ''} onChange={onChange} placeholder={placeholder}
+        className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none" />
+    )}
+  </div>
+);
 
 export const AdminCMSDrawer = () => {
   const {
@@ -16,6 +30,7 @@ export const AdminCMSDrawer = () => {
     addCategory, deleteCategory,
     addProduct, updateProduct, deleteProduct,
     updateConfig, exportJSON, resetToDefaults, showToast,
+    publishChanges, publishStatus, publishError, setPublishError, isCloudConfigured,
   } = useStore();
 
   const [activeTab, setActiveTab] = useState('products');
@@ -23,16 +38,18 @@ export const AdminCMSDrawer = () => {
 
   // ─── Formulario Producto ────────────────────────────────────────────────
   const [editingId, setEditingId] = useState(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [prodForm, setProdForm] = useState({
     name: '', category: 'cremas',
-    price: '', discount: '',
-    description: '', image: '', badge: '', tag: '',
+    basePrice: '', salePrice: '',
+    description: '', image: '', badge: '', tag: '', gender: 'hombre',
   });
   const [imagePreview, setImagePreview] = useState('');
   const fileInputRef = useRef(null);
 
   // ─── Formulario Textos Hero ─────────────────────────────────────────────
   const [textForm, setTextForm] = useState({
+    heroManifesto: config.heroManifesto || '',
     heroTagline: config.heroTagline || '',
     heroBrandTitle: config.heroBrandTitle || '',
     featuresTitle: config.featuresTitle || '',
@@ -62,71 +79,86 @@ export const AdminCMSDrawer = () => {
     contactEmail: config.contactEmail || '',
     contactPhone: config.contactPhone || '',
     contactLocation: config.contactLocation || '',
+    contactMessage: config.contactMessage || '',
     contactIG: config.contactIG || '',
     contactFB: config.contactFB || '',
     contactWA: config.contactWA || '',
   });
 
   // ─── Imagen ─────────────────────────────────────────────────────────────
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-      setProdForm((prev) => ({ ...prev, image: reader.result }));
-      showToast('Imagen cargada');
-    };
-    reader.readAsDataURL(file);
+    setPublishError('');
+    try {
+      const compressedImage = await compressImage(file);
+      setImagePreview(compressedImage);
+      setProdForm((prev) => ({ ...prev, image: compressedImage }));
+      showToast('Imagen comprimida y cargada');
+    } catch (error) {
+      setPublishError(error?.message || 'No se pudo procesar la imagen.');
+    }
   };
 
   const handleStartEdit = (prod) => {
     setEditingId(prod.id);
     setProdForm({
       name: prod.name, category: prod.category,
-      price: prod.price !== null ? prod.price.toString() : '',
-      discount: prod.discount !== null ? prod.discount.toString() : '',
+      basePrice: prod.originalPrice != null ? String(prod.originalPrice) : (prod.price != null ? String(prod.price) : ''),
+      salePrice: prod.price != null ? String(prod.price) : '',
       description: prod.description,
-      image: prod.image, badge: prod.badge || '', tag: prod.tag || '',
+      image: prod.image, badge: prod.badge || '', tag: prod.tag || '', gender: prod.gender || 'hombre',
     });
     setImagePreview(prod.image);
     setActiveTab('products');
+    setIsProductModalOpen(true);
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setProdForm({ name: '', category: 'cremas', price: '', discount: '', description: '', image: '', badge: '', tag: '' });
+    setProdForm({ name: '', category: 'cremas', basePrice: '', salePrice: '', description: '', image: '', badge: '', tag: '', gender: 'hombre' });
     setImagePreview('');
+    setIsProductModalOpen(false);
   };
 
-  const handleSaveProduct = (e) => {
+  const handlePublishChanges = async () => {
+    setPublishError('');
+    try {
+      await publishChanges();
+    } catch (error) {
+      setPublishError(error?.message || 'No se pudieron guardar los cambios.');
+    }
+  };
+
+  const handleSaveProduct = async (e) => {
     e.preventDefault();
     if (!prodForm.name.trim()) { showToast('Ingresa el nombre del producto'); return; }
-    const payload = {
-      name: prodForm.name, category: prodForm.category,
-      price: prodForm.price !== '' ? parseFloat(prodForm.price) : null,
-      discount: prodForm.discount !== '' ? parseFloat(prodForm.discount) : null,
-      description: prodForm.description,
-      image: prodForm.image || '/assets/george_223_chica_diamonds.jpg',
-      badge: prodForm.badge, tag: prodForm.tag,
-    };
-    editingId ? updateProduct(editingId, payload) : addProduct(payload);
-    handleCancelEdit();
+    setPublishError('');
+    try {
+      const basePrice = prodForm.basePrice !== '' && !Number.isNaN(Number(prodForm.basePrice)) ? parseFloat(prodForm.basePrice) : null;
+      const salePrice = prodForm.salePrice !== '' && !Number.isNaN(Number(prodForm.salePrice)) ? parseFloat(prodForm.salePrice) : null;
+      const payload = {
+        name: prodForm.name, category: prodForm.category,
+        gender: prodForm.gender,
+        originalPrice: basePrice && salePrice && basePrice > salePrice ? basePrice : null,
+        price: salePrice ?? basePrice,
+        discount: basePrice && salePrice && basePrice > salePrice
+          ? Math.round(((basePrice - salePrice) / basePrice) * 100)
+          : null,
+        description: prodForm.description,
+        image: prodForm.image || '/assets/george_223_chica_diamonds.jpg',
+        badge: prodForm.badge, tag: prodForm.tag,
+      };
+      const nextProducts = editingId
+        ? products.map((product) => product.id === editingId ? { ...product, ...payload } : product)
+        : [{ ...payload, id: `prod-${Date.now()}`, specs: ['Alta Calidad'] }, ...products];
+      editingId ? updateProduct(editingId, payload) : addProduct(payload);
+      await publishChanges({ products: nextProducts });
+      handleCancelEdit();
+    } catch (error) {
+      setPublishError(error?.message || 'No se pudo guardar el producto.');
+    }
   };
-
-  // ─── Helper campos de formulario ────────────────────────────────────────
-  const InputField = ({ label, value, onChange, placeholder, type = 'text', textarea = false }) => (
-    <div>
-      <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">{label}</label>
-      {textarea ? (
-        <textarea rows={3} value={value} onChange={onChange} placeholder={placeholder}
-          className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none resize-none" />
-      ) : (
-        <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-          className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none" />
-      )}
-    </div>
-  );
 
   if (!isAdminAuth) return null;
 
@@ -197,11 +229,10 @@ export const AdminCMSDrawer = () => {
                   <button
                     key={id}
                     onClick={() => setActiveTab(id)}
-                    className={`flex-1 py-2.5 px-2 text-[10px] font-montserrat font-bold flex flex-col items-center gap-1 whitespace-nowrap transition-colors border-b-2 ${
-                      activeTab === id
+                    className={`flex-1 py-2.5 px-2 text-[10px] font-montserrat font-bold flex flex-col items-center gap-1 whitespace-nowrap transition-colors border-b-2 ${activeTab === id
                         ? 'border-[#00FF88] text-[#00FF88] bg-[#161E1A]'
                         : 'border-transparent text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
                     <span>{label}</span>
@@ -211,11 +242,38 @@ export const AdminCMSDrawer = () => {
 
               {/* Contenido con scroll */}
               <div className="flex-1 overflow-y-auto p-5 space-y-5">
+                {(!isCloudConfigured || publishStatus || publishError) && (
+                  <div className="space-y-2">
+                    {!isCloudConfigured && (
+                      <div className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-[11px] font-mono text-amber-300">
+                        Modo Local activo (conecta Supabase para sincronizar entre dispositivos)
+                      </div>
+                    )}
+                    {publishStatus && (
+                      <div className="rounded-lg border border-[#00FF88]/30 bg-[#00FF88]/10 px-3 py-2 text-[11px] font-mono text-[#00FF88]">
+                        {publishStatus}
+                      </div>
+                    )}
+                    {publishError && (
+                      <div className="rounded-lg border border-red-500/50 bg-red-500/15 px-3 py-2 text-[11px] font-mono text-red-300">
+                        {publishError}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* ══ TAB 1: PRODUCTOS ══ */}
                 {activeTab === 'products' && (
                   <div className="space-y-5">
-                    <form onSubmit={handleSaveProduct} className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
+                    <button type="button" onClick={() => { handleCancelEdit(); setIsProductModalOpen(true); }}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#107C41] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white">
+                      <Plus className="h-4 w-4" /> Nuevo producto
+                    </button>
+                    {isProductModalOpen && (
+                    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+                      <motion.div initial={{ opacity: 0, scale: 0.96, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="relative max-h-[88vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-[#107C41]/60 bg-[#0A0D0C] p-5 shadow-2xl">
+                    <button type="button" onClick={handleCancelEdit} className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                    <form onSubmit={handleSaveProduct} className="space-y-3">
                       <div className="flex items-center justify-between pb-2 border-b border-white/10">
                         <span className="text-xs font-mono font-bold text-[#00FF88] uppercase">
                           {editingId ? 'EDITAR PRODUCTO' : '+ NUEVO PRODUCTO'}
@@ -242,29 +300,30 @@ export const AdminCMSDrawer = () => {
                             ))}
                           </select>
                         </div>
-                        <div>
-                          <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">PRECIO (dejar vacío = Consultar)</label>
-                          <input type="number" step="0.01" value={prodForm.price}
-                            onChange={(e) => setProdForm({ ...prodForm, price: e.target.value })}
-                            placeholder="Consultar precio"
-                            className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none" />
-                        </div>
+                        <InputField label="PRECIO BASE" type="number" value={prodForm.basePrice}
+                          onChange={(e) => setProdForm((prev) => ({ ...prev, basePrice: e.target.value }))}
+                          placeholder="Ej. 39.99" />
                       </div>
 
+                      <InputField label="PRECIO CON DESCUENTO / OFERTA" type="number" value={prodForm.salePrice}
+                        onChange={(e) => setProdForm((prev) => ({ ...prev, salePrice: e.target.value }))}
+                        placeholder="Dejar vacío si no hay oferta" />
+
                       <div>
-                        <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">
-                          DESCUENTO % (dejar vacío = sin descuento)
-                        </label>
-                        <input type="number" step="1" min="0" max="100" value={prodForm.discount}
-                          onChange={(e) => setProdForm({ ...prodForm, discount: e.target.value })}
-                          placeholder="Ej. 20 (significa 20% de descuento)"
-                          className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none" />
-                        {prodForm.price && prodForm.discount && (
-                          <p className="text-[10px] text-[#00FF88] mt-1">
-                            Precio tachado: ${(parseFloat(prodForm.price) / (1 - parseFloat(prodForm.discount) / 100)).toFixed(2)} → Precio final: ${parseFloat(prodForm.price).toFixed(2)}
-                          </p>
-                        )}
+                        <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">GÉNERO</label>
+                        <select value={prodForm.gender}
+                          onChange={(e) => setProdForm({ ...prodForm, gender: e.target.value })}
+                          className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none">
+                          <option value="hombre">Hombre</option>
+                          <option value="mujer">Mujer</option>
+                        </select>
                       </div>
+
+                      {prodForm.basePrice && prodForm.salePrice && Number(prodForm.basePrice) > Number(prodForm.salePrice) && (
+                        <p className="text-[10px] text-[#00FF88]">
+                          Precio base: ${Number(prodForm.basePrice).toFixed(2)} → Precio final: ${Number(prodForm.salePrice).toFixed(2)}
+                        </p>
+                      )}
 
                       <InputField label="DESCRIPCIÓN" value={prodForm.description}
                         onChange={(e) => setProdForm({ ...prodForm, description: e.target.value })}
@@ -304,6 +363,9 @@ export const AdminCMSDrawer = () => {
                         {editingId ? 'Guardar Cambios' : 'Crear Producto'}
                       </button>
                     </form>
+                    </motion.div>
+                    </div>
+                    )}
 
                     {/* Lista de productos */}
                     <div className="space-y-2">
@@ -377,9 +439,21 @@ export const AdminCMSDrawer = () => {
 
                 {/* ══ TAB 3: PORTADA Y FRASES ══ */}
                 {activeTab === 'texts' && (
-                  <form onSubmit={(e) => { e.preventDefault(); updateConfig(textForm); }} className="space-y-4">
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    setPublishError('');
+                    try {
+                      updateConfig(textForm);
+                      await publishChanges({ config: { ...config, ...textForm } });
+                    } catch (error) {
+                      setPublishError(error?.message || 'No se pudo guardar la portada.');
+                    }
+                  }} className="space-y-4">
                     <div className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
                       <span className="text-xs font-mono font-bold text-[#00FF88] uppercase block">FRASE HERO Y BRANDING</span>
+                      <InputField label="MANIFIESTO DE PORTADA" value={textForm.heroManifesto}
+                        onChange={(e) => setTextForm({ ...textForm, heroManifesto: e.target.value })}
+                        placeholder="Mensaje principal de la portada" textarea />
                       <InputField label="FRASE MOTIVACIONAL HERO (debajo del 3D)" value={textForm.heroTagline}
                         onChange={(e) => setTextForm({ ...textForm, heroTagline: e.target.value })}
                         placeholder="Deja tu presencia, así no estés..." />
@@ -402,7 +476,7 @@ export const AdminCMSDrawer = () => {
                       <InputField label="RESISTENCIA / DURABILIDAD" value={textForm.resistance}
                         onChange={(e) => setTextForm({ ...textForm, resistance: e.target.value })} placeholder="Fragancia Larga Duración" />
                       <InputField label="CONTENIDO NETO" value={textForm.netContent}
-                        onChange={(e) => setTextForm({ ...textForm, netContent: e.target.value })} placeholder="150 ml / 5.07 fl.oz" />
+                        onChange={(e) => setTextForm({ ...textForm, netContent: e.target.value })} placeholder="120 ml / 4.06 fl.oz" />
                       <InputField label="CÓDIGO DE EDICIÓN" value={textForm.editionCode}
                         onChange={(e) => setTextForm({ ...textForm, editionCode: e.target.value })} placeholder="#GV-ESM-2.0" />
                     </div>
@@ -415,7 +489,16 @@ export const AdminCMSDrawer = () => {
 
                 {/* ══ TAB 4: SOBRE NOSOTROS ══ */}
                 {activeTab === 'about' && (
-                  <form onSubmit={(e) => { e.preventDefault(); updateConfig(aboutForm); }} className="space-y-4">
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    setPublishError('');
+                    try {
+                      updateConfig(aboutForm);
+                      await publishChanges({ config: { ...config, ...aboutForm } });
+                    } catch (error) {
+                      setPublishError(error?.message || 'No se pudo guardar Sobre Nosotros.');
+                    }
+                  }} className="space-y-4">
                     <div className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
                       <span className="text-xs font-mono font-bold text-[#00FF88] uppercase block">HISTORIA DE LA MARCA</span>
                       <InputField label="HISTORIA" value={aboutForm.aboutHistory}
@@ -453,7 +536,16 @@ export const AdminCMSDrawer = () => {
 
                 {/* ══ TAB 5: CONTACTO ══ */}
                 {activeTab === 'contact' && (
-                  <form onSubmit={(e) => { e.preventDefault(); updateConfig(contactForm); }} className="space-y-4">
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    setPublishError('');
+                    try {
+                      updateConfig(contactForm);
+                      await publishChanges({ config: { ...config, ...contactForm } });
+                    } catch (error) {
+                      setPublishError(error?.message || 'No se pudo guardar el contacto.');
+                    }
+                  }} className="space-y-4">
                     <div className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
                       <span className="text-xs font-mono font-bold text-[#00FF88] uppercase block">INFORMACIÓN DE CONTACTO</span>
                       <InputField label="CORREO ELECTRÓNICO" value={contactForm.contactEmail}
@@ -465,6 +557,9 @@ export const AdminCMSDrawer = () => {
                       <InputField label="UBICACIÓN / COBERTURA DE ENVÍOS" value={contactForm.contactLocation}
                         onChange={(e) => setContactForm({ ...contactForm, contactLocation: e.target.value })}
                         placeholder="Medellín / Bogotá / Envíos Globales" />
+                      <InputField label="MENSAJE DE ATENCIÓN AL CLIENTE" value={contactForm.contactMessage}
+                        onChange={(e) => setContactForm({ ...contactForm, contactMessage: e.target.value })}
+                        placeholder="Escribe cómo atendemos pedidos y consultas..." textarea />
                     </div>
                     <div className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
                       <span className="text-xs font-mono font-bold text-[#00FF88] uppercase block">REDES SOCIALES</span>
@@ -494,11 +589,10 @@ export const AdminCMSDrawer = () => {
                       {LOGO_TEXTURES.map((tex) => (
                         <div key={tex.id}
                           onClick={() => updateConfig({ logoTexture: tex.id })}
-                          className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all ${
-                            config.logoTexture === tex.id
+                          className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all ${config.logoTexture === tex.id
                               ? 'bg-[#062618] border-[#00FF88] shadow-[0_0_15px_rgba(0,168,89,0.3)]'
                               : 'bg-[#121715] border-white/10 hover:border-white/30'
-                          }`}
+                            }`}
                         >
                           <div>
                             <span className="font-grotesk font-bold text-xs text-white block">{tex.name}</span>
@@ -514,15 +608,21 @@ export const AdminCMSDrawer = () => {
               </div>
 
               {/* Footer acciones globales */}
-              <div className="p-4 border-t border-white/10 bg-[#0A0D0C] flex items-center justify-between gap-3 shrink-0">
-                <button type="button" onClick={resetToDefaults}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white text-xs font-mono transition-colors">
-                  <RotateCcw className="w-3 h-3" /><span>Restablecer</span>
+              <div className="p-4 border-t border-white/10 bg-[#0A0D0C] space-y-2 shrink-0">
+                <button type="button" onClick={handlePublishChanges}
+                  className="w-full py-3 rounded-lg bg-gradient-to-r from-[#107C41] to-[#00A859] text-white text-xs font-montserrat font-bold uppercase tracking-wider">
+                  Guardar cambios
                 </button>
-                <button type="button" onClick={exportJSON}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#107C41] hover:bg-[#00A859] text-white text-xs font-montserrat font-bold transition-all">
-                  <Download className="w-3.5 h-3.5" /><span>Exportar JSON</span>
-                </button>
+                <div className="flex items-center justify-between gap-3">
+                  <button type="button" onClick={resetToDefaults}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white text-xs font-mono transition-colors">
+                    <RotateCcw className="w-3 h-3" /><span>Restablecer</span>
+                  </button>
+                  <button type="button" onClick={exportJSON}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#107C41] hover:bg-[#00A859] text-white text-xs font-montserrat font-bold transition-all">
+                    <Download className="w-3.5 h-3.5" /><span>Exportar JSON</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>

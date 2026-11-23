@@ -1,225 +1,189 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Lock, Volume2, VolumeX } from 'lucide-react';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { Navbar } from './components/Navbar';
-import { GiantTypography } from './components/GiantTypography';
-import { CarbonParticles } from './components/CarbonParticles';
-import { Product3DExperience } from './components/Product3DExperience';
-import { HeroBottom } from './components/HeroBottom';
-import { ProductFeaturesSection } from './components/ProductFeaturesSection';
-import { CollageGallerySection } from './components/CollageGallerySection';
 import { DynamicCatalogSection } from './components/DynamicCatalogSection';
-import { InteractiveVideoSection } from './components/InteractiveVideoSection';
 import { AdminCMSDrawer } from './components/AdminCMSDrawer';
 import { AdminLoginModal } from './components/AdminLoginModal';
-import { LogoG2 } from './components/LogoG2';
-import { Lock } from 'lucide-react';
-
-// Modales
-import { VideoModal } from './components/VideoModal';
-import { ApplicationModal } from './components/ApplicationModal';
 import { QuickBuyModal } from './components/QuickBuyModal';
-import { MenuModal } from './components/MenuModal';
 import { AboutModal } from './components/AboutModal';
 import { ContactModal } from './components/ContactModal';
 
 function MainShop() {
-  const { config, toastMessage, totalCartCount, isAdminAuth } = useStore();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { config, isAdminAuth, logoutAdmin, updateConfig, toastMessage } = useStore();
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [buyOpen, setBuyOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [muted, setMuted] = useState(true);
 
-  // Modales públicos
-  const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [isAppModalOpen, setIsAppModalOpen] = useState(false);
-  const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
-  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-
-  // Modal de login admin
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-      setMousePos({ x, y });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Detectar hash #admin en la URL
   useEffect(() => {
     const checkHash = () => {
-      if (window.location.hash === '#admin' && !isAdminAuth) {
-        setIsLoginModalOpen(true);
-      }
+      if (window.location.hash === '#admin' && !isAdminAuth) setLoginOpen(true);
     };
     checkHash();
     window.addEventListener('hashchange', checkHash);
     return () => window.removeEventListener('hashchange', checkHash);
   }, [isAdminAuth]);
 
+  const editText = (field, value) => {
+    if (isAdminAuth) updateConfig({ [field]: value });
+  };
+
   return (
-    <div className="relative min-h-screen w-full bg-[#0A0D0C] text-white selection:bg-[#00A859] selection:text-white overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-white text-[#0A0A0A]">
+      {isAdminAuth && (
+        <div className="fixed left-1/2 top-[74px] z-[55] -translate-x-1/2 rounded-full bg-[#107C41] px-5 py-2 text-[10px] font-black tracking-[0.16em] text-white shadow-xl">
+          MODO EDICIÓN ACTIVO
+        </div>
+      )}
 
-      {/* Fondos globales */}
-      <div className="fixed inset-0 pointer-events-none -z-20 transition-all duration-700"
-        style={{ background: 'radial-gradient(circle at 50% 48%, #062618 0%, #04180F 42%, #0A0D0C 85%)' }} />
-      <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_50%_45%,rgba(0,168,89,0.18)_0%,rgba(6,38,24,0.08)_50%,transparent_75%)]" />
-      <div className="fixed inset-0 pointer-events-none -z-10 opacity-25 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:24px_24px]" />
-
-      {/* Navbar */}
       <Navbar
-        onOpenBuyModal={() => setIsBuyModalOpen(true)}
-        onOpenMenuModal={() => setIsMenuModalOpen(true)}
-        onOpenAboutModal={() => setIsAboutModalOpen(true)}
-        onOpenContactModal={() => setIsContactModalOpen(true)}
+        onOpenBuyModal={() => setBuyOpen(true)}
+        onOpenAboutModal={() => setAboutOpen(true)}
+        onOpenContactModal={() => setContactOpen(true)}
       />
 
-      {/* HERO SECTION */}
-      <main className="relative w-full flex flex-col items-center justify-center pt-24 sm:pt-28 pb-6 overflow-hidden">
-        <div className="relative w-full max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[580px] sm:min-h-[660px]">
-          <GiantTypography mouseX={mousePos.x} mouseY={mousePos.y} />
-          <CarbonParticles />
-          <div className="relative w-full h-[460px] sm:h-[540px] md:h-[600px] flex items-center justify-center z-20">
-            <Product3DExperience
-              mouseNorm={mousePos}
-              onOpenVideoModal={() => setIsVideoModalOpen(true)}
-              onOpenAppModal={() => setIsAppModalOpen(true)}
-              onOpenBuyModal={() => setIsBuyModalOpen(true)}
-            />
-          </div>
-          <HeroBottom
-            onOpenVideoModal={() => setIsVideoModalOpen(true)}
-            onOpenAppModal={() => setIsAppModalOpen(true)}
-            onOpenBuyModal={() => setIsBuyModalOpen(true)}
-          />
-        </div>
-      </main>
+      <main>
+        <section id="inicio" className="relative min-h-[820px] overflow-hidden bg-[#F7F7F4] px-4 pb-10 pt-24 sm:px-8 sm:pt-28">
+          <div className="mx-auto max-w-[1400px]">
+            <div className="flex h-[250px] items-center justify-center sm:h-[300px]">
+              <img
+                src="/assets/george-22-oficial.jpeg"
+                alt="Logo oficial GEORGE 2.2"
+                className="aspect-square h-[230px] w-[230px] overflow-hidden rounded-full object-cover object-center drop-shadow-[0_18px_28px_rgba(0,0,0,.12)] sm:h-[280px] sm:w-[280px]"
+              />
+            </div>
 
-      {/* Secciones */}
-      <ProductFeaturesSection onOpenBuyModal={() => setIsBuyModalOpen(true)} />
-      <CollageGallerySection />
-      <DynamicCatalogSection onOpenBuyModal={() => setIsBuyModalOpen(true)} />
-      <InteractiveVideoSection />
+            <div className="grid min-h-[390px] overflow-hidden rounded-none border border-black/10 bg-white shadow-[0_18px_45px_rgba(0,0,0,.08)] lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="flex items-center px-6 py-10 sm:px-12 lg:px-16">
+                <div className="max-w-xl">
+                  <p className="mb-6 text-[10px] font-black tracking-[0.3em] text-black/45">ESENCIA / IDENTIDAD / PRESENCIA</p>
+                  <div
+                    suppressContentEditableWarning
+                    contentEditable={isAdminAuth}
+                    onBlur={(e) => editText('heroManifesto', e.currentTarget.innerText)}
+                    className={`border-l-2 border-[#107C41] pl-5 text-lg leading-[1.55] sm:text-[22px] ${isAdminAuth ? 'cursor-text outline-dashed outline-1 outline-[#107C41]/40' : ''}`}
+                  >
+                    {config.heroManifesto}
+                  </div>
+                </div>
+              </div>
 
-      {/* FOOTER */}
-      <footer className="relative w-full bg-[#070A09] border-t border-[#107C41]/30 py-16 px-4 sm:px-8 text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-
-          <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-3">
-              <LogoG2 texture={config.logoTexture || 'carbon'} size={36} />
-              <div className="flex flex-col">
-                <span className="font-montserrat font-extrabold text-sm tracking-[0.18em] text-white uppercase">
-                  {config.heroBrandTitle || 'GEORGE VARIEDADES'}
-                </span>
-                <span className="font-mono text-[9px] text-[#00A859] tracking-widest uppercase">
-                  ESTILO · PRESENCIA · ELEGANCIA
-                </span>
+              <div className="relative min-h-[330px] overflow-hidden border-t border-black/10 bg-black lg:border-l lg:border-t-0">
+                <video
+                  src="/assets/entregando-cremas.mp4"
+                  autoPlay
+                  loop
+                  muted={muted}
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/55 px-5 py-4 text-white backdrop-blur-sm">
+                  <p className="text-[9px] font-black tracking-[0.16em]">Producto Entregado — GEORGE 2.2 en manos de nuestra gente</p>
+                  <button onClick={() => setMuted(!muted)} className="text-white" aria-label="Controlar sonido">
+                    {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
             </div>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
-              Cremas, perfumes, ropa y relojes de distinción. Línea Esmeralda &amp; Puro Caramelo — deja tu presencia, así no estés.
-            </p>
           </div>
+        </section>
 
-          <div>
-            <h5 className="font-grotesk font-bold text-xs tracking-widest text-[#00FF88] uppercase mb-4">
-              LÍNEA INSIGNIA
-            </h5>
-            <ul className="space-y-2 text-xs text-[#CBD5E1]">
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsBuyModalOpen(true)}>GEORGE 2.0 — Puro Caramelo</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsBuyModalOpen(true)}>GEORGE 2.2 Diablo</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsBuyModalOpen(true)}>GEORGE 2.2 Angel Mugler</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsBuyModalOpen(true)}>Esmeralda Noir Perfume</li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="font-grotesk font-bold text-xs tracking-widest text-[#00FF88] uppercase mb-4">
-              EXPLORAR
-            </h5>
-            <ul className="space-y-2 text-xs text-[#CBD5E1]">
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsMenuModalOpen(true)}>Catálogo Completo</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsAboutModalOpen(true)}>Sobre Nosotros</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsContactModalOpen(true)}>Contacto &amp; Pedidos</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setIsVideoModalOpen(true)}>Ver en Video</li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="font-grotesk font-bold text-xs tracking-widest text-[#00FF88] uppercase mb-4">
-              ATENCIÓN AL CLIENTE
-            </h5>
-            <p className="text-xs text-[#94A3B8] mb-3 leading-relaxed">
-              {config.contactLocation || 'Despacho express a nivel nacional e internacional.'} Garantía de calidad en cada producto.
-            </p>
-            <div className="p-3 rounded-xl bg-[#121715] border border-white/10 text-xs font-mono text-[#00FF88]">
-              #GV-ESM-2026 // ALL RIGHTS RESERVED
+        <section className="scrolly-section relative px-4 py-24 sm:px-8 sm:py-32">
+          <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="mb-5 text-[10px] font-bold tracking-[0.28em] opacity-60">NUESTRA ESENCIA</p>
+              <h1 className="text-5xl font-black leading-[0.92] tracking-[-0.06em] sm:text-7xl lg:text-8xl">
+                TU ESTILO.<br />TU AROMA.<br /><span className="italic">TU PRESENCIA.</span>
+              </h1>
+            </div>
+            <div className="border-l border-current/20 pl-6 sm:pl-10">
+              <p className="max-w-xl text-lg leading-relaxed sm:text-2xl">
+                GEORGE 2.2 convierte el cuidado personal en una firma. Crema, esencia y carácter: una sola huella hecha a tu medida.
+              </p>
+              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-current/20 pt-5">
+                <div><b className="block text-xl">120 ml</b><span className="text-[9px] tracking-widest opacity-60">CONTENIDO</span></div>
+                <div><b className="block text-xl">24h</b><span className="text-[9px] tracking-widest opacity-60">PRESENCIA</span></div>
+                <div><b className="block text-xl">G2.2</b><span className="text-[9px] tracking-widest opacity-60">EDICIÓN</span></div>
+              </div>
             </div>
           </div>
+        </section>
 
-        </div>
+        <DynamicCatalogSection onOpenBuyModal={() => setBuyOpen(true)} />
 
-        {/* Footer bottom bar — candado de acceso admin (discreto) */}
-        <div className="max-w-7xl mx-auto pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-          <div>© {new Date().getFullYear()} GEORGE VARIEDADES. El estilo habla por ti.</div>
-          <div className="flex items-center gap-4">
-            <span className="hover:text-white cursor-pointer">Términos</span>
-            <span>•</span>
-            <span className="hover:text-white cursor-pointer">Privacidad</span>
-            <span>•</span>
-            {/* Candado discreto de acceso admin — solo visible si no está autenticado */}
+        <section id="nosotros" className="bg-[#F3F3EF] px-4 py-24 sm:px-8">
+          <div className="mx-auto max-w-[1400px]">
+            <p className="mb-5 text-[10px] font-bold tracking-[0.28em] text-black/45">SOBRE NOSOTROS</p>
+            <div className="grid gap-12 border-t border-black/15 pt-8 md:grid-cols-3">
+              {[
+                ['Misión', 'aboutMission', config.aboutMission],
+                ['Visión', 'aboutVision', config.aboutVision],
+                ['Historia', 'aboutHistory', config.aboutHistory],
+              ].map(([title, field, value]) => (
+                <article key={field}>
+                  <h3 className="mb-5 text-sm font-black tracking-[0.18em]">{title.toUpperCase()}</h3>
+                  <p
+                    suppressContentEditableWarning
+                    contentEditable={isAdminAuth}
+                    onBlur={(e) => editText(field, e.currentTarget.innerText)}
+                    className={`text-sm leading-7 text-black/65 ${isAdminAuth ? 'outline-dashed outline-1 outline-[#107C41]/40' : ''}`}
+                  >
+                    {value}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="contacto" className="bg-white px-4 py-20 sm:px-8">
+          <div className="mx-auto flex max-w-[1400px] flex-col justify-between gap-8 border-t border-black/15 pt-8 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.28em] text-black/45">CONTACTO</p>
+              <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">CONVERSEMOS.</h2>
+            </div>
+            <div className="text-sm leading-7 sm:text-right">
+              <p>{config.contactEmail}</p>
+              <a href={`https://wa.me/${(config.contactPhone || config.contactWA || '').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="underline decoration-black/20">
+                {config.contactPhone}
+              </a>
+              <p>{config.contactLocation}</p>
+              {config.contactMessage && <p className="mt-2 max-w-sm text-black/55 sm:ml-auto">{config.contactMessage}</p>}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-black/10 px-4 py-8 sm:px-8">
+        <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-5 text-[10px] tracking-wider sm:flex-row">
+          <p>© {new Date().getFullYear()} GEORGE VARIEDADES</p>
+          <div className="flex items-center gap-5">
+            <span>PRIVACIDAD</span>
             {!isAdminAuth && (
-              <button
-                onClick={() => setIsLoginModalOpen(true)}
-                className="p-1 rounded text-slate-700 hover:text-slate-400 transition-colors"
-                title="Acceso administrador"
-                aria-label="Acceso administrador"
-              >
-                <Lock className="w-3 h-3" />
+              <button onClick={() => setLoginOpen(true)} className="flex items-center gap-2 text-black/45 hover:text-black">
+                <Lock className="h-3 w-3" /> Acceso Administrador
               </button>
             )}
+            {isAdminAuth && <button onClick={logoutAdmin} className="font-bold">Cerrar sesión</button>}
           </div>
         </div>
       </footer>
 
-      {/* Panel Admin CMS (solo se renderiza si está autenticado) */}
       <AdminCMSDrawer />
+      <AdminLoginModal isOpen={loginOpen} onClose={() => { setLoginOpen(false); window.history.replaceState(null, '', window.location.pathname); }} />
+      <QuickBuyModal isOpen={buyOpen} onClose={() => setBuyOpen(false)} />
+      <AboutModal isOpen={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
 
-      {/* Modal de Login Admin */}
-      <AdminLoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => { setIsLoginModalOpen(false); window.history.replaceState(null, '', window.location.pathname); }}
-      />
-
-      {/* Toast */}
-      {toastMessage && (
-        <div className="fixed top-20 right-6 z-[60] px-4 py-2.5 rounded-xl bg-[#062618]/95 backdrop-blur-md border border-[#00FF88] text-white text-xs font-grotesk font-bold shadow-[0_10px_25px_rgba(0,0,0,0.8),0_0_15px_rgba(0,255,136,0.3)] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-          <span className="w-2 h-2 rounded-full bg-[#00FF88] animate-ping" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Modales públicos */}
-      <QuickBuyModal isOpen={isBuyModalOpen} onClose={() => setIsBuyModalOpen(false)} />
-      <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} onOpenBuyModal={() => setIsBuyModalOpen(true)} />
-      <ApplicationModal isOpen={isAppModalOpen} onClose={() => setIsAppModalOpen(false)} onOpenBuyModal={() => setIsBuyModalOpen(true)} />
-      <MenuModal isOpen={isMenuModalOpen} onClose={() => setIsMenuModalOpen(false)} onSelectProduct={() => setIsBuyModalOpen(true)} />
-      <AboutModal isOpen={isAboutModalOpen} onClose={() => setIsAboutModalOpen(false)} />
-      <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
-
+      {toastMessage && <div className="fixed right-5 top-24 z-[80] rounded-full bg-black px-5 py-3 text-xs font-bold text-white shadow-xl">{toastMessage}</div>}
     </div>
   );
 }
 
 export function App() {
-  return (
-    <StoreProvider>
-      <MainShop />
-    </StoreProvider>
-  );
+  return <StoreProvider><MainShop /></StoreProvider>;
 }
 
 export default App;

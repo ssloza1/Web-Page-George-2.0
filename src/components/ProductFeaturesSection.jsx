@@ -26,7 +26,7 @@ export const ProductFeaturesSection = ({ onOpenBuyModal }) => {
     },
     {
       label: 'Contenido Neto',
-      value: config.netContent || '150 ml / 5.07 fl. oz. (Envase Ergonómico)',
+      value: config.netContent || '120 ml / 5.07 fl. oz. (Envase Ergonómico)',
       icon: Droplet,
       color: '#00A859',
     },

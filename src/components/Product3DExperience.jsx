@@ -29,8 +29,8 @@ const HOTSPOTS_DATA = [
   {
     id: 'envase',
     name: 'Envase',
-    title: 'Diseño Ergonómico Ultra Ligero 150ml',
-    description: 'Tubo ligero y comprimible de 150ml, dosificación precisa antidesperdicio para cinturón o chaleco de trail.',
+    title: 'Diseño Ergonómico Ultra Ligero 120 ml',
+    description: 'Tubo ligero y comprimible de 120 ml, dosificación precisa antidesperdicio para cinturón o chaleco de trail.',
     icon: Package,
     tag: 'DISEÑO ULTRA LIGERO',
     accentColor: '#107C41',
@@ -508,7 +508,7 @@ export const Product3DExperience = ({
                         className="flex items-center gap-1.5 text-[11px] font-montserrat font-bold text-[#00FF88] hover:underline"
                       >
                         <Package className="w-3 h-3" />
-                        Adquirir edición 150ml
+                        Adquirir edición 120 ml
                       </button>
                     )}
                     <span className="text-[10px] font-mono text-slate-400">PUNTO #{HOTSPOTS_DATA.findIndex(h => h.id === spot.id) + 1}</span>

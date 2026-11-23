@@ -15,7 +15,7 @@ export const HeroBottom = ({ onOpenVideoModal, onOpenAppModal, onOpenBuyModal })
           EDICIÓN ESPECIAL // MODELO GEORGE 2.0
         </span>
         <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#107C41] text-white font-mono font-bold">
-          150 ML
+          120 ML
         </span>
       </div>
 

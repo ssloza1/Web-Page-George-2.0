@@ -10,7 +10,7 @@ export const MenuModal = ({ isOpen, onClose, onSelectProduct }) => {
       title: 'CREMAS & GELES DE RECUPERACIÓN',
       badge: 'DESTACADO',
       items: [
-        { name: 'GEORGE 2.0 - Crema Dermo-Sport 150ml', price: '$34.99', status: 'MODELO INSIGNIA', isHero: true },
+        { name: 'GEORGE 2.0 - Crema Dermo-Sport 120 ml', price: '$34.99', status: 'MODELO INSIGNIA', isHero: true },
         { name: 'GEORGE Cryo-Freeze Roll-On 90ml', price: '$24.50', status: 'DISPONIBLE' },
         { name: 'Bálsamo Antifricción Extra-Distance 100g', price: '$22.00', status: 'DISPONIBLE' },
       ],
@@ -28,7 +28,7 @@ export const MenuModal = ({ isOpen, onClose, onSelectProduct }) => {
       title: 'KITS DE ENTRENAMIENTO & PACKS',
       badge: 'AHORRO',
       items: [
-        { name: 'Pack Dúo Runner (2x GEORGE 2.0 150ml)', price: '$59.49', status: 'AHORRA 30%' },
+        { name: 'Pack Dúo Runner (2x GEORGE 2.0 120 ml)', price: '$59.49', status: 'AHORRA 30%' },
         { name: 'Marathon Finisher Box (Crema + Roll-On + Electrolitos)', price: '$89.00', status: 'EDICIÓN ESPECIAL' },
       ],
     },

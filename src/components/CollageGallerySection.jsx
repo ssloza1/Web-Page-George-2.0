@@ -69,7 +69,7 @@ export const CollageGallerySection = () => {
     {
       id: 6,
       title: 'Trío Mira Pal Norte',
-      subtitle: 'PACK ULTRA DISTANCIA 150ML',
+      subtitle: 'PACK ULTRA DISTANCIA 120ML',
       img: '/assets/george_22_mira_pal_norte.jpg',
       initialRotate: 1.8,
       zIndex: 13,

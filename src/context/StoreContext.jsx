@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  CREDENCIALES DE ADMINISTRADOR — Cambiar aquí directamente
@@ -7,6 +8,12 @@ export const ADMIN_USER = 'admin_george';
 export const ADMIN_PASS = 'Esmeralda2026*';
 
 const StoreContext = createContext();
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = SUPABASE_URL && SUPABASE_ANON_KEY
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
 
 // ─── Categorías por defecto ─────────────────────────────────────────────────
 const DEFAULT_CATEGORIES = [
@@ -21,19 +28,19 @@ const DEFAULT_CATEGORIES = [
 const DEFAULT_PRODUCTS = [
   {
     id: 'prod-1',
-    name: 'GEORGE 2.0 // Diablo Puro Caramelo',
+    name: 'GEORGE 2.0 // DIABLA Puro Caramelo',
     category: 'cremas',
     price: null,
     discount: null,
     tag: 'INSIGNIA',
     badge: 'MÁS VENDIDO',
     description: 'Fórmula original Esmeralda Puro Caramelo con extracto bio-activo. Absorción ultra rápida en menos de 45 seg.',
-    image: '/assets/label_diablo_official.jpg',
-    specs: ['150ml', 'Hidratación Profunda', 'Aroma Puro Caramelo'],
+    image: '/assets/george-22-oficial.jpeg',
+    specs: ['120 ml', 'Hidratación Profunda', 'Aroma Puro Caramelo'],
   },
   {
     id: 'prod-2',
-    name: 'GEORGE 2.2 // Diablo Performance',
+    name: 'GEORGE 2.2 // DIABLA',
     category: 'cremas',
     price: null,
     discount: null,
@@ -41,7 +48,7 @@ const DEFAULT_PRODUCTS = [
     badge: 'NUEVA FÓRMULA',
     description: 'Potenciada para máxima exigencia. Efecto crio-térmico de acción rápida sobre la piel.',
     image: '/assets/george_22_diablo.jpg',
-    specs: ['150ml', 'Efecto Térmico Intenso', 'Fórmula Dermo-activa'],
+    specs: ['120 ml', 'Efecto Térmico Intenso', 'Fórmula Dermo-activa'],
   },
   {
     id: 'prod-3',
@@ -53,7 +60,7 @@ const DEFAULT_PRODUCTS = [
     badge: 'LUJO',
     description: 'Edición con aroma sofisticado Angel Mugler. Hidratación de larga duración y textura sedosa.',
     image: '/assets/george_22_angel_mugler.jpg',
-    specs: ['150ml', 'Aroma Angel Mugler', 'Sedosidad Extrema'],
+    specs: ['120 ml', 'Aroma Angel Mugler', 'Sedosidad Extrema'],
   },
   {
     id: 'prod-4',
@@ -65,48 +72,13 @@ const DEFAULT_PRODUCTS = [
     badge: 'ELEGANTE',
     description: 'Crema de cuidado avanzado con fragancia que define tu presencia. Piel suave e hidratada todo el día.',
     image: '/assets/george_22_mira_pal_norte.jpg',
-    specs: ['150ml', 'Fragancia Duradera', 'Nutrición Profunda'],
-  },
-  {
-    id: 'prod-5',
-    name: 'Colección Textil Esmeralda',
-    category: 'ropa',
-    price: null,
-    discount: null,
-    tag: 'ESTILO',
-    badge: 'NUEVA LÍNEA',
-    description: 'Prendas con carácter y distinción. Corte moderno, tela premium con detalles esmeralda.',
-    image: '/assets/campaign_WhatsApp Image 2026-11-10 at 17.55.25.jpeg',
-    specs: ['Algodón Premium', 'Corte Slim', 'Detalles Esmeralda'],
-  },
-  {
-    id: 'prod-6',
-    name: 'Cronógrafo Carbon G2',
-    category: 'relojes',
-    price: null,
-    discount: null,
-    tag: 'DISTINCIÓN',
-    badge: 'ALTA GAMA',
-    description: 'Reloj de distinción con caja de fibra de carbono, bisel esmeralda y mecanismo de precisión.',
-    image: '/assets/campaign_WhatsApp Image 2026-11-21 at 18.54.18.jpeg',
-    specs: ['Acero 316L', 'Zafiro Anti-rayado', 'Sumergible 50m'],
-  },
-  {
-    id: 'prod-7',
-    name: 'Perfume GEORGE // Esmeralda Noir',
-    category: 'perfumes',
-    price: null,
-    discount: null,
-    tag: 'AROMA',
-    badge: 'EXCLUSIVO',
-    description: 'Fragancia oscura y sofisticada. Notas de madera de oud, caramelo y esencias verdes.',
-    image: '/assets/campaign_WhatsApp Image 2026-11-21 at 18.54.18  (1).jpeg',
-    specs: ['100ml EDP', 'Notas Amaderadas', 'Duración 12h'],
+    specs: ['120 ml', 'Fragancia Duradera', 'Nutrición Profunda'],
   },
 ];
 
 // ─── Configuración por defecto — incluye datos de About y Contacto ──────────
 const DEFAULT_STORE_CONFIG = {
+  heroManifesto: 'Buscando siempre dejar mi huella en el mundo, quiero empezar con un producto que es mío; algo que haga que tanto hombres como mujeres se sientan identificados, que se sientan seguros de ser ellos mismos y seguros de que aquí hay más que entregar para mi gente.',
   heroTagline: 'Deja tu presencia, así no estés. GEORGE 2.0 — Puro Caramelo.',
   heroBrandTitle: 'GEORGE VARIEDADES',
   featuresTitle: 'Lo Que Hace Excepcional a GEORGE 2.0',
@@ -114,7 +86,7 @@ const DEFAULT_STORE_CONFIG = {
   formulaName: 'Extracto Bio-Esmeralda & Puro Caramelo',
   thermalAction: 'Hidratación Profunda de Absorción Rápida',
   resistance: 'Fragancia & Suavidad de Larga Duración',
-  netContent: '150 ml / 5.07 fl. oz. (Envase Ergonómico)',
+  netContent: '120 ml / 4.06 fl. oz. (Envase Ergonómico)',
   editionCode: '#GV-ESM-2.0',
   logoTexture: 'carbon',
   ctaBannerTitle: 'Define tu estilo, marca tu esencia. Descubre la colección GEORGE 2.0.',
@@ -132,6 +104,7 @@ const DEFAULT_STORE_CONFIG = {
   contactEmail: 'hola@georgevariedades.com',
   contactPhone: '+57 300 928 2000',
   contactLocation: 'Medellín / Bogotá / Envíos Globales',
+  contactMessage: 'Atendemos consultas y pedidos por correo o WhatsApp. Nuestro equipo te orientará sobre disponibilidad y envíos.',
   contactIG: '@georgevariedades',
   contactFB: 'fb.com/georgevariedades',
   contactWA: '+57 300 928 2000',
@@ -182,12 +155,63 @@ export const StoreProvider = ({ children }) => {
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [publishStatus, setPublishStatus] = useState('');
+  const [publishError, setPublishError] = useState('');
+  const [isCloudConfigured, setIsCloudConfigured] = useState(Boolean(supabase));
 
-  // Guardar en localStorage
-  useEffect(() => { localStorage.setItem('gv_categories', JSON.stringify(categories)); }, [categories]);
-  useEffect(() => { localStorage.setItem('gv_products', JSON.stringify(products)); }, [products]);
-  useEffect(() => { localStorage.setItem('gv_config', JSON.stringify(config)); }, [config]);
-  useEffect(() => { localStorage.setItem('gv_cart', JSON.stringify(cart)); }, [cart]);
+  const applyPublishedState = (published) => {
+    if (!published) return;
+    if (Array.isArray(published.categories)) setCategories(published.categories);
+    if (Array.isArray(published.products)) setProducts(published.products);
+    if (published.config && typeof published.config === 'object') setConfig(published.config);
+  };
+
+  useEffect(() => {
+    if (!supabase) return undefined;
+
+    let active = true;
+    const loadPublishedState = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('site_state')
+          .select('categories, products, config')
+          .eq('id', 'main')
+          .maybeSingle();
+        if (error) throw error;
+        if (active && data) applyPublishedState(data);
+      } catch (error) {
+        if (active) {
+          setPublishError(`No se pudo cargar la nube: ${error?.message || 'Error de conexion'}`);
+        }
+      }
+    };
+
+    loadPublishedState();
+
+    const channel = supabase
+      .channel('site_state_live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_state', filter: 'id=eq.main' }, (payload) => {
+        if (payload.new) applyPublishedState(payload.new);
+      })
+      .subscribe();
+
+    return () => {
+      active = false;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // Respaldo local seguro para todos los cambios.
+  useEffect(() => {
+    try {
+      localStorage.setItem('gv_categories', JSON.stringify(categories));
+      localStorage.setItem('gv_products', JSON.stringify(products));
+      localStorage.setItem('gv_config', JSON.stringify(config));
+      localStorage.setItem('gv_cart', JSON.stringify(cart));
+    } catch (error) {
+      setPublishError(`No se pudo guardar el respaldo local: ${error?.message || 'Almacenamiento insuficiente'}`);
+    }
+  }, [categories, products, config, cart]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -278,6 +302,44 @@ export const StoreProvider = ({ children }) => {
     showToast('Configuración restablecida');
   };
 
+  const publishChanges = async (nextState) => {
+    setPublishError('');
+    const snapshot = nextState ? {
+      categories: nextState.categories ?? categories,
+      products: nextState.products ?? products,
+      config: nextState.config ?? config,
+    } : { categories, products, config };
+
+    if (!supabase) {
+      try {
+        localStorage.setItem('gv_categories', JSON.stringify(snapshot.categories));
+        localStorage.setItem('gv_products', JSON.stringify(snapshot.products));
+        localStorage.setItem('gv_config', JSON.stringify(snapshot.config));
+        setPublishStatus('Cambios publicados localmente');
+        showToast('Modo Local activo: cambios guardados en este dispositivo');
+      } catch (error) {
+        const message = `Error al guardar localmente: ${error?.message || 'Almacenamiento insuficiente'}`;
+        setPublishError(message);
+        throw new Error(message);
+      }
+      return;
+    }
+
+    setPublishStatus('Guardando en la nube...');
+    try {
+      const payload = { id: 'main', ...snapshot, updated_at: new Date().toISOString() };
+      const { error } = await supabase.from('site_state').upsert(payload, { onConflict: 'id' });
+      if (error) throw error;
+      setPublishStatus('Cambios publicados para todos los usuarios');
+      showToast('Cambios publicados para todos los usuarios');
+    } catch (error) {
+      const message = `Error al publicar en la nube: ${error?.message || 'No fue posible conectar con Supabase'}`;
+      setPublishStatus('');
+      setPublishError(message);
+      throw new Error(message);
+    }
+  };
+
   const totalCartCount = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
   const totalCartPrice = cart.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0);
 
@@ -291,7 +353,8 @@ export const StoreProvider = ({ children }) => {
       addCategory, deleteCategory,
       addProduct, updateProduct, deleteProduct,
       addToCart, removeFromCart, updateCartQuantity,
-      updateConfig, exportJSON, resetToDefaults,
+      updateConfig, exportJSON, resetToDefaults, publishChanges,
+      publishStatus, publishError, setPublishError, isCloudConfigured,
     }}>
       {children}
     </StoreContext.Provider>
