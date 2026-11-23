@@ -181,7 +181,12 @@ export const StoreProvider = ({ children }) => {
         if (active && data) applyPublishedState(data);
       } catch (error) {
         if (active) {
-          setPublishError(`No se pudo cargar la nube: ${error?.message || 'Error de conexion'}`);
+          const details = error?.message || 'Error de conexion';
+          if (error?.code === 'PGRST205' || details.includes("public.site_state")) {
+            setPublishError('Supabase conectado, pero falta crear la tabla public.site_state. Ejecuta supabase-schema.sql en el editor SQL de Supabase.');
+          } else {
+            setPublishError(`No se pudo cargar la nube: ${details}`);
+          }
         }
       }
     };
