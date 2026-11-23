@@ -79,6 +79,8 @@ const DEFAULT_PRODUCTS = [
 // ─── Configuración por defecto — incluye datos de About y Contacto ──────────
 const DEFAULT_STORE_CONFIG = {
   heroManifesto: 'Buscando siempre dejar mi huella en el mundo, quiero empezar con un producto que es mío; algo que haga que tanto hombres como mujeres se sientan identificados, que se sientan seguros de ser ellos mismos y seguros de que aquí hay más que entregar para mi gente.',
+  heroVideoUrl: '/assets/prductoentregado.mp4',
+  heroVideoLabel: 'Producto Entregado — GEORGE 2.2 en manos de nuestra gente',
   heroTagline: 'Deja tu presencia, así no estés. GEORGE 2.0 — Puro Caramelo.',
   heroBrandTitle: 'GEORGE VARIEDADES',
   featuresTitle: 'Lo Que Hace Excepcional a GEORGE 2.0',
@@ -91,23 +93,24 @@ const DEFAULT_STORE_CONFIG = {
   logoTexture: 'carbon',
   ctaBannerTitle: 'Define tu estilo, marca tu esencia. Descubre la colección GEORGE 2.0.',
   // Sobre Nosotros
-  aboutHistory: 'En GEORGE VARIEDADES nacimos de una pasión por la elegancia cotidiana. Creemos que el cuidado personal, el aroma que llevas y la ropa que vistes son la primera impresión que dejas — incluso antes de decir una palabra. Tras años de investigación y formulación artesanal, presentamos nuestra línea GEORGE 2.0: cremas de alta calidad, perfumes con carácter, ropa con distinción y relojes que hablan por ti.',
-  aboutMission: 'Ofrecer productos de cuidado personal, perfumería, ropa y relojería de la más alta calidad a quienes entienden que el estilo es una forma de vida. Cada producto GEORGE VARIEDADES está diseñado para potenciar tu presencia y acompañarte en cada momento.',
-  aboutVision: 'Ser la marca de referencia en América Latina para quienes definen su identidad a través del aroma, el cuidado y la elegancia. Expandir la esencia de GEORGE 2.0 a cada rincón del mundo.',
-  aboutPillar1: 'Calidad Artesanal',
-  aboutPillar1Desc: 'Ingredientes seleccionados y procesos rigurosos de elaboración.',
-  aboutPillar2: 'Elegancia Natural',
-  aboutPillar2Desc: 'Fragancias y texturas que resaltan tu esencia auténtica.',
-  aboutPillar3: 'Distinción Total',
-  aboutPillar3Desc: 'Productos que marcan diferencia en presencia y estilo.',
+  aboutHistory: 'Buscando siempre dejar mi huella en el mundo, decidí empezar con un producto propio: algo que haga que tanto hombres como mujeres se sientan identificados, seguros de ser ellos mismos y convencidos de que aquí siempre hay más por entregar para nuestra gente. Así nació nuestra línea insignia GEORGE 2.2 — Esmeralda Puro Caramelo, el punto de partida de un universo de cuidado personal, perfumes, ropa y relojes con carácter propio.',
+  aboutMission: 'Ofrecer productos de uso personal —cremas de alto cuidado, fragancias memorables, prendas y relojes— creados con calidad auténtica para resaltar la identidad, confianza y presencia única de cada persona.',
+  aboutVision: 'Consolidar a GEORGE VARIEDADES como una marca referente de estilo y esencia propia, conectando con nuestra gente a través de lanzamientos exclusivos que hablen por sí solos.',
+  aboutPillar1: 'Esencia Propia',
+  aboutPillar1Desc: 'Fórmulas y diseños pensados para dejar huella incluso cuando ya no estás.',
+  aboutPillar2: 'Identidad Sin Límites',
+  aboutPillar2Desc: 'Colecciones creadas para hombres y mujeres auténticos y seguros de sí mismos.',
+  aboutPillar3: 'Calidad Genuina',
+  aboutPillar3Desc: 'Presentaciones cuidadas al detalle, como nuestra crema insignia de 120 ml.',
   // Contacto
-  contactEmail: 'hola@georgevariedades.com',
-  contactPhone: '+57 300 928 2000',
-  contactLocation: 'Medellín / Bogotá / Envíos Globales',
-  contactMessage: 'Atendemos consultas y pedidos por correo o WhatsApp. Nuestro equipo te orientará sobre disponibilidad y envíos.',
+  contactEmail: 'contacto@georgevariedades.com',
+  contactPhone: '+593 99 000 0000',
+  contactLocation: 'Ecuador — Envíos Seguros a Todo el País',
+  contactHours: 'Lunes a Sábado: 9:00 AM – 7:00 PM',
+  contactMessage: '¿Tienes dudas sobre nuestras cremas de 120 ml, próximos lanzamientos de perfumes, ropa y relojes, o deseas hacer un pedido personalizado? Escríbenos directamente.',
   contactIG: '@georgevariedades',
   contactFB: 'fb.com/georgevariedades',
-  contactWA: '+57 300 928 2000',
+  contactWA: '+593 99 000 0000',
 };
 
 export const StoreProvider = ({ children }) => {

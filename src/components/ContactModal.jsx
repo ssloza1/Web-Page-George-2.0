@@ -9,12 +9,13 @@ export const ContactModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const email    = config.contactEmail    || 'hola@georgevariedades.com';
-  const phone    = config.contactPhone    || '+57 300 928 2000';
-  const location = config.contactLocation || 'Medellín / Bogotá / Envíos Globales';
+  const email    = config.contactEmail    || 'contacto@georgevariedades.com';
+  const phone    = config.contactPhone    || '+593 99 000 0000';
+  const location = config.contactLocation || 'Ecuador — Envíos Seguros a Todo el País';
+  const hours    = config.contactHours    || 'Lunes a Sábado: 9:00 AM – 7:00 PM';
   const ig       = config.contactIG       || '@georgevariedades';
   const fb       = config.contactFB       || 'fb.com/georgevariedades';
-  const wa       = config.contactWA       || '+57 300 928 2000';
+  const wa       = config.contactWA       || '+593 99 000 0000';
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ export const ContactModal = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF88] animate-pulse" />
               <h3 className="font-grotesk font-bold text-base sm:text-lg text-white tracking-wide">
-                CONTACTO // GEORGE VARIEDADES
+                CONTÁCTANOS // ATENCIÓN DIRECTA
               </h3>
             </div>
             <button onClick={onClose} className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors" aria-label="Cerrar">
@@ -46,6 +47,9 @@ export const ContactModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="p-6 sm:p-8 space-y-6">
+            <p className="text-xs leading-relaxed text-[#CBD5E1]">
+              ¿Tienes dudas sobre nuestras cremas de 120 ml, próximos lanzamientos de perfumes, ropa y relojes, o deseas hacer un pedido personalizado? Escríbenos directamente.
+            </p>
             {sent ? (
               <div className="py-12 text-center flex flex-col items-center">
                 <CheckCircle2 className="w-14 h-14 text-[#00FF88] mb-3" />
@@ -90,6 +94,9 @@ export const ContactModal = ({ isOpen, onClose }) => {
                 </a>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[#00A859] shrink-0" /><span>{location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#00A859] shrink-0" /><span>{hours}</span>
                 </div>
                 <a href={`https://wa.me/${wa.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-white transition-colors text-[#00FF88]">

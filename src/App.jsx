@@ -72,7 +72,7 @@ function MainShop() {
 
               <div className="relative min-h-[330px] overflow-hidden border-t border-black/10 bg-black lg:border-l lg:border-t-0">
                 <video
-                  src="/assets/entregando-cremas.mp4"
+                  src={config.heroVideoUrl || '/assets/prductoentregado.mp4'}
                   autoPlay
                   loop
                   muted={muted}
@@ -80,7 +80,7 @@ function MainShop() {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/55 px-5 py-4 text-white backdrop-blur-sm">
-                  <p className="text-[9px] font-black tracking-[0.16em]">Producto Entregado — GEORGE 2.2 en manos de nuestra gente</p>
+                  <p className="text-[9px] font-black tracking-[0.16em]">{config.heroVideoLabel || 'Producto Entregado — GEORGE 2.2 en manos de nuestra gente'}</p>
                   <button onClick={() => setMuted(!muted)} className="text-white" aria-label="Controlar sonido">
                     {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                   </button>

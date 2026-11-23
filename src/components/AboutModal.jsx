@@ -22,7 +22,7 @@ export const AboutModal = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF88] animate-pulse" />
               <h3 className="font-grotesk font-bold text-base sm:text-lg text-white tracking-wide">
-                HISTORIA, MISIÓN & VISIÓN // GEORGE VARIEDADES
+                GEORGE VARIEDADES // ESENCIA & ESTILO
               </h3>
             </div>
             <button onClick={onClose} className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors" aria-label="Cerrar">
@@ -37,15 +37,15 @@ export const AboutModal = ({ isOpen, onClose }) => {
                 G2
               </div>
               <div>
-                <h4 className="font-montserrat font-bold text-sm text-white">GEORGE VARIEDADES • ESTILO & PRESENCIA</h4>
-                <p className="text-xs text-[#CBD5E1]">Cremas · Perfumes · Ropa · Relojes — Elegancia que habla por ti.</p>
+                <h4 className="font-montserrat font-bold text-sm text-white">GEORGE VARIEDADES // ESENCIA & ESTILO</h4>
+                <p className="text-xs text-[#CBD5E1]">Cuidado personal, fragancias y estilo diseñados para dejar tu presencia donde vayas.</p>
               </div>
             </div>
 
             {/* Historia */}
             <p className="text-sm font-inter text-[#CBD5E1] leading-relaxed">
               {config.aboutHistory ||
-                'En GEORGE VARIEDADES nacimos de una pasión por la elegancia cotidiana. Creemos que el cuidado personal, el aroma que llevas y la ropa que vistes son la primera impresión que dejas — incluso antes de decir una palabra. Tras años de investigación y formulación artesanal, presentamos nuestra línea GEORGE 2.0: cremas de alta calidad, perfumes con carácter, ropa con distinción y relojes que hablan por ti.'}
+                'Buscando siempre dejar mi huella en el mundo, decidí empezar con un producto propio: algo que haga que tanto hombres como mujeres se sientan identificados, seguros de ser ellos mismos y convencidos de que aquí siempre hay más por entregar para nuestra gente. Así nació nuestra línea insignia GEORGE 2.2 — Esmeralda Puro Caramelo, el punto de partida de un universo de cuidado personal, perfumes, ropa y relojes con carácter propio.'}
             </p>
 
             {/* Misión */}
@@ -56,7 +56,7 @@ export const AboutModal = ({ isOpen, onClose }) => {
               </div>
               <p className="text-xs text-[#CBD5E1] leading-relaxed">
                 {config.aboutMission ||
-                  'Ofrecer productos de cuidado personal, perfumería, ropa y relojería de la más alta calidad a quienes entienden que el estilo es una forma de vida. Cada producto GEORGE VARIEDADES está diseñado para potenciar tu presencia y acompañarte en cada momento.'}
+                  'Ofrecer productos de uso personal —cremas de alto cuidado, fragancias memorables, prendas y relojes— creados con calidad auténtica para resaltar la identidad, confianza y presencia única de cada persona.'}
               </p>
             </div>
 
@@ -68,16 +68,16 @@ export const AboutModal = ({ isOpen, onClose }) => {
               </div>
               <p className="text-xs text-[#CBD5E1] leading-relaxed">
                 {config.aboutVision ||
-                  'Ser la marca de referencia en América Latina para quienes definen su identidad a través del aroma, el cuidado y la elegancia. Expandir la esencia de GEORGE 2.0 a cada rincón del mundo.'}
+                  'Consolidar a GEORGE VARIEDADES como una marca referente de estilo y esencia propia, conectando con nuestra gente a través de lanzamientos exclusivos que hablen por sí solos.'}
               </p>
             </div>
 
             {/* 3 Pilares */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
               {[
-                { icon: Target, num: 1, defaultTitle: 'Calidad Artesanal', defaultDesc: 'Ingredientes seleccionados y procesos rigurosos de elaboración.' },
-                { icon: Shield, num: 2, defaultTitle: 'Elegancia Natural', defaultDesc: 'Fragancias y texturas que resaltan tu esencia auténtica.' },
-                { icon: Award, num: 3, defaultTitle: 'Distinción Total', defaultDesc: 'Productos que marcan diferencia en presencia y estilo.' },
+                { icon: Target, num: 1, defaultTitle: 'Esencia Propia', defaultDesc: 'Fórmulas y diseños pensados para dejar huella incluso cuando ya no estás.' },
+                { icon: Shield, num: 2, defaultTitle: 'Identidad Sin Límites', defaultDesc: 'Colecciones creadas para hombres y mujeres auténticos y seguros de sí mismos.' },
+                { icon: Award, num: 3, defaultTitle: 'Calidad Genuina', defaultDesc: 'Presentaciones cuidadas al detalle, como nuestra crema insignia de 120 ml.' },
               ].map(({ icon: Icon, num, defaultTitle, defaultDesc }) => (
                 <div key={num} className="p-4 rounded-xl bg-[#121715] border border-white/10 text-center">
                   <Icon className="w-6 h-6 text-[#00A859] mx-auto mb-2" />
@@ -93,7 +93,7 @@ export const AboutModal = ({ isOpen, onClose }) => {
 
             {/* Frase de cierre */}
             <p className="text-xs font-mono text-[#94A3B8] pt-2 text-center italic">
-              "EL ESTILO ES LO QUE HABLA POR TI ANTES DE QUE DIGAS UNA PALABRA." — GEORGE VARIEDADES
+              "DEJA TU PRESENCIA, ASÍ NO ESTÉS." — GEORGE VARIEDADES
             </p>
           </div>
         </motion.div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings, X, Plus, Trash2, Edit3, Upload,
@@ -59,6 +59,8 @@ export const AdminCMSDrawer = () => {
     resistance: config.resistance || '',
     netContent: config.netContent || '',
     editionCode: config.editionCode || '',
+    heroVideoUrl: config.heroVideoUrl || '/assets/prductoentregado.mp4',
+    heroVideoLabel: config.heroVideoLabel || 'Producto Entregado — GEORGE 2.2 en manos de nuestra gente',
   });
 
   // ─── Formulario Sobre Nosotros ──────────────────────────────────────────
@@ -79,11 +81,57 @@ export const AdminCMSDrawer = () => {
     contactEmail: config.contactEmail || '',
     contactPhone: config.contactPhone || '',
     contactLocation: config.contactLocation || '',
+    contactHours: config.contactHours || '',
     contactMessage: config.contactMessage || '',
     contactIG: config.contactIG || '',
     contactFB: config.contactFB || '',
     contactWA: config.contactWA || '',
   });
+
+  useEffect(() => {
+    setTextForm((previous) => ({
+      ...previous,
+      heroManifesto: config.heroManifesto || '',
+      heroTagline: config.heroTagline || '',
+      heroBrandTitle: config.heroBrandTitle || '',
+      featuresTitle: config.featuresTitle || '',
+      ctaBannerTitle: config.ctaBannerTitle || '',
+      formulaName: config.formulaName || '',
+      thermalAction: config.thermalAction || '',
+      resistance: config.resistance || '',
+      netContent: config.netContent || '',
+      editionCode: config.editionCode || '',
+      heroVideoUrl: config.heroVideoUrl || '/assets/prductoentregado.mp4',
+      heroVideoLabel: config.heroVideoLabel || 'Producto Entregado — GEORGE 2.2 en manos de nuestra gente',
+    }));
+  }, [config]);
+
+  useEffect(() => {
+    setAboutForm({
+      aboutHistory: config.aboutHistory || '',
+      aboutMission: config.aboutMission || '',
+      aboutVision: config.aboutVision || '',
+      aboutPillar1: config.aboutPillar1 || '',
+      aboutPillar1Desc: config.aboutPillar1Desc || '',
+      aboutPillar2: config.aboutPillar2 || '',
+      aboutPillar2Desc: config.aboutPillar2Desc || '',
+      aboutPillar3: config.aboutPillar3 || '',
+      aboutPillar3Desc: config.aboutPillar3Desc || '',
+    });
+  }, [config.aboutHistory, config.aboutMission, config.aboutVision, config.aboutPillar1, config.aboutPillar1Desc, config.aboutPillar2, config.aboutPillar2Desc, config.aboutPillar3, config.aboutPillar3Desc]);
+
+  useEffect(() => {
+    setContactForm({
+      contactEmail: config.contactEmail || '',
+      contactPhone: config.contactPhone || '',
+      contactLocation: config.contactLocation || '',
+      contactHours: config.contactHours || '',
+      contactMessage: config.contactMessage || '',
+      contactIG: config.contactIG || '',
+      contactFB: config.contactFB || '',
+      contactWA: config.contactWA || '',
+    });
+  }, [config.contactEmail, config.contactPhone, config.contactLocation, config.contactHours, config.contactMessage, config.contactIG, config.contactFB, config.contactWA]);
 
   // ─── Imagen ─────────────────────────────────────────────────────────────
   const handleImageUpload = async (e) => {
@@ -466,6 +514,29 @@ export const AdminCMSDrawer = () => {
                       <InputField label="TÍTULO BANNER CTA INFERIOR" value={textForm.ctaBannerTitle}
                         onChange={(e) => setTextForm({ ...textForm, ctaBannerTitle: e.target.value })}
                         placeholder="Define tu estilo, marca tu esencia..." />
+                      <div>
+                        <label className="text-[11px] font-mono text-[#94A3B8] block mb-1">VIDEO DE PORTADA</label>
+                        <select
+                          value={textForm.heroVideoUrl}
+                          onChange={(e) => setTextForm({ ...textForm, heroVideoUrl: e.target.value })}
+                          className="w-full px-3 py-2 rounded-lg bg-[#0A0D0C] border border-white/15 text-xs text-white focus:border-[#00FF88] outline-none"
+                        >
+                          <option value="/assets/prductoentregado.mp4">Producto entregado</option>
+                          <option value="/assets/entregando-cremas.mp4">Entregando cremas</option>
+                          <option value="/assets/cream_splash.mp4">Cremas splash</option>
+                          <option value="/assets/video_runner_applying.mp4">Aplicación de crema</option>
+                        </select>
+                        <div className="mt-2">
+                          <InputField label="URL DIRECTA DEL VIDEO (.MP4)" value={textForm.heroVideoUrl}
+                            onChange={(e) => setTextForm({ ...textForm, heroVideoUrl: e.target.value })}
+                            placeholder="/assets/video.mp4 o https://..." />
+                          <div className="mt-2">
+                            <InputField label="ETIQUETA DEL VIDEO" value={textForm.heroVideoLabel}
+                              onChange={(e) => setTextForm({ ...textForm, heroVideoLabel: e.target.value })}
+                              placeholder="Texto visible debajo del video" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="p-4 rounded-xl bg-[#121715] border border-white/10 space-y-3">
                       <span className="text-xs font-mono font-bold text-[#00FF88] uppercase block">ESPECIFICACIONES TÉCNICAS</span>
@@ -557,6 +628,9 @@ export const AdminCMSDrawer = () => {
                       <InputField label="UBICACIÓN / COBERTURA DE ENVÍOS" value={contactForm.contactLocation}
                         onChange={(e) => setContactForm({ ...contactForm, contactLocation: e.target.value })}
                         placeholder="Medellín / Bogotá / Envíos Globales" />
+                      <InputField label="HORARIO DE ATENCIÓN" value={contactForm.contactHours}
+                        onChange={(e) => setContactForm({ ...contactForm, contactHours: e.target.value })}
+                        placeholder="Lunes a Sábado: 9:00 AM – 7:00 PM" />
                       <InputField label="MENSAJE DE ATENCIÓN AL CLIENTE" value={contactForm.contactMessage}
                         onChange={(e) => setContactForm({ ...contactForm, contactMessage: e.target.value })}
                         placeholder="Escribe cómo atendemos pedidos y consultas..." textarea />

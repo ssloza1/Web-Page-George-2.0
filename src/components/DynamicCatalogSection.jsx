@@ -5,7 +5,26 @@ import { useStore } from '../context/StoreContext';
 const CategoryCard = ({ category, title, eyebrow, onOpenBuyModal, dark = false }) => {
   const { products, isAdminAuth, setIsAdminOpen, addToCart, deleteProduct } = useStore();
   const [gender, setGender] = useState('hombre');
-  const filtered = products.filter((p) => p.category === category && (!p.gender || p.gender === gender));
+  const normalize = (value) => String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+
+  const sectionCategory = normalize(category);
+  const filtered = products.filter((product) => {
+    const productCategory = normalize(product.category);
+    const productGender = normalize(product.gender);
+    const categoryMatches = productCategory === sectionCategory
+      || (sectionCategory === 'cremas' && ['crema', 'cremas'].includes(productCategory))
+      || (sectionCategory === 'perfumes' && ['perfume', 'perfumes'].includes(productCategory))
+      || (sectionCategory === 'ropa' && ['ropa', 'vestimenta'].includes(productCategory))
+      || (sectionCategory === 'relojes' && ['reloj', 'relojes'].includes(productCategory));
+    if (!categoryMatches) return false;
+    if (sectionCategory === 'cremas') return true;
+    if (!productGender) return true;
+    return productGender === gender || ['unisex', 'todos', 'all'].includes(productGender);
+  });
   const isEmpty = filtered.length === 0;
   const isCream = category === 'cremas';
 
